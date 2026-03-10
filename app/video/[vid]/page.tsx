@@ -16,15 +16,15 @@ const getRelatedVideos = async (id: number) => {
     return res.data.items;
 }
 
-export async function generateMetadata({ params }: any): Promise<Metadata> {
-    const { vid } = await params;
+export async function generateMetadata({params}: any): Promise<Metadata> {
+    const {vid} = await params;
 
     // 从你的 Laravel API 获取电影详情
     const movie = await getVideo(vid);
 
     return {
         title: `${movie.title} - 小马影视`,
-        keywords:`导演:${movie.director},演员:${movie.main_actor}`,
+        keywords: `导演:${movie.director},演员:${movie.main_actor}`,
         description: `${movie.title}全集高清观看，剧情介绍：${movie.description.slice(0, 100)}...`,
         openGraph: {
             images: [movie.thumbnail], // 社交媒体分享时的预览图
@@ -149,13 +149,13 @@ export default async function VideoPage({params}: { params: { vid: string } }) {
                         </div>
                     </div>
                 </div>
-                <div className="w-full md:w-140">
+                <div className="w-full md:min-w-110 md:max-w-110">
                     {/* 相关视频 */}
                     <div className="lg:col-span-2">
                         <h2 className="text-xl font-bold mb-4">相关推荐</h2>
                         <div className="grid grid-cols-2 gap-4">
                             {relatedVideos.map((vod: any) => (
-                                <MovieCard key={vod.id} movie={vod}/>
+                                <MovieCard key={vod.id} movie={vod} linkTarget={'_self'}/>
                             ))}
                         </div>
                     </div>

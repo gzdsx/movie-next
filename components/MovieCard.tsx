@@ -9,11 +9,11 @@ export interface Movie {
 }
 
 
-export const MovieCard = ({movie = {}}: { movie: Movie }) => {
+export const MovieCard = ({movie = {}, linkTarget = "_blank"}: { movie: Movie, linkTarget?: string }) => {
     return (
         <div>
             <div className="pt-[145%] relative overflow-hidden">
-                <Link href={`/video/${movie.vid}`} target="_blank">
+                <Link href={`/video/${movie.vid}`} target={linkTarget}>
                     <img
                         src={movie.thumbnail}
                         alt={movie.title}
@@ -25,7 +25,7 @@ export const MovieCard = ({movie = {}}: { movie: Movie }) => {
             </div>
             <div className="p-2">
                 <h3 className="text-sm font-semibold truncate text-center">
-                    <Link href={`/video/${movie.vid}`} target="_blank" title={movie.title}>{movie.title}</Link>
+                    <Link href={`/video/${movie.vid}`} target={linkTarget} title={movie.title}>{movie.title}</Link>
                 </h3>
             </div>
         </div>
