@@ -17,6 +17,10 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className="dark">
+        <head>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306822352785197"
+                    crossOrigin="anonymous"></script>
+        </head>
         <body className={`bg-black text-white min-h-screen`}>
         <ConfigProvider theme={{
             algorithm: theme.darkAlgorithm,

@@ -4,6 +4,7 @@ import VideoPlayer from "react-player";
 import Link from "next/link";
 import {MovieCard} from "@/components/MovieCard";
 import {Metadata} from "next";
+import AdsenseBanner from "@/components/AdsenseBanner";
 
 const getVideo = async (vid: string) => {
     const res = await apiGet(`/movies/${vid}`);
@@ -11,7 +12,7 @@ const getVideo = async (vid: string) => {
 }
 
 const getRelatedVideos = async (id: number) => {
-    const res = await apiGet(`/movies/${id}/related`, {limit: 6});
+    const res = await apiGet(`/movies/${id}/related`, {limit: 10});
     return res.data.items;
 }
 
@@ -38,83 +39,72 @@ export default async function VideoPage({params}: { params: { vid: string } }) {
     const comments: any[] = [];
 
     return (
-        <div className="min-h-screen bg-black text-white">
-            <div className="max-w-7xl mx-auto px-4 py-8">
-                {/* 视频播放器 */}
-                <div className="relative bg-gray-900 rounded-lg overflow-hidden mb-8">
-                    <div className="aspect-video bg-black flex items-center justify-center">
-                        <VideoPlayer
-                            src={video.source_src}
-                            playing
-                            controls
-                            preload={'auto'}
-                            playsInline
-                            style={{width: '100%', height: '100%'}}
-                        />
+        <div className="container mx-auto px-4 py-4 ext-white">
+            <div className="flex flex-col md:flex-row gap-4">
+                <div className="grow">
+                    {/* 视频播放器 */}
+                    <div className="relative bg-gray-900 rounded-lg overflow-hidden mb-8">
+                        <div className="aspect-video bg-black flex items-center justify-center">
+                            <VideoPlayer
+                                src={video.source_src}
+                                playing
+                                controls
+                                preload={'auto'}
+                                playsInline
+                                style={{width: '100%', height: '100%'}}
+                            />
+                        </div>
                     </div>
-                </div>
-
-                {/* 视频信息 */}
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold mb-2">{video?.title + ' - ' + video?.source_name}</h1>
-                    <div className="flex items-center gap-4 text-gray-400 mb-4">
+                    {/* 视频信息 */}
+                    <div className="mb-8">
+                        <h1 className="text-3xl font-bold mb-2">{video?.title + ' - ' + video?.source_name}</h1>
+                        <div className="flex items-center gap-4 text-gray-400 mb-4">
                         <span className="flex items-center gap-1">
                           <Star className="w-4 h-4 text-yellow-500 fill-yellow-500"/>
                           9.7
                         </span>
-                        <span>{video.year}</span>
-                        <span>{video.region}</span>
-                        <span>{video.tags}</span>
-                    </div>
-                    <div className="flex items-center gap-4 mb-4">
-                        <span>导演:{video.director}</span>
-                    </div>
-                    <div className="flex items-center gap-4 mb-4">
-                        <span>演员:{video.main_actor}</span>
-                    </div>
-                    <p className="text-gray-300 leading-relaxed">
-                        {video?.description}
-                    </p>
-                    <div className="gap-4 mt-4">
-                        <h2>剧集</h2>
-                        <div className="flex flex-wrap gap-2 mt-2">
-                            {
-                                video.sources.map((source: any) => (
-                                    <Link
-                                        href={`/video/${source.vid}`} key={source.id}
-                                        className={`border border-gray-300 rounded px-2 py-1 text-sm ${source.id === video.source_id ? 'bg-red-400 border-red-400' : ''}`}
-                                    >
-                                        <span>{source.name}</span>
-                                    </Link>
-                                ))
-                            }
+                            <span>{video.year}</span>
+                            <span>{video.region}</span>
+                            <span>{video.tags}</span>
+                        </div>
+                        <div className="flex items-center gap-4 mb-4">
+                            <span>导演:{video.director}</span>
+                        </div>
+                        <div className="flex items-center gap-4 mb-4">
+                            <span>演员:{video.main_actor}</span>
+                        </div>
+                        <p className="text-gray-300 leading-relaxed">
+                            {video?.description}
+                        </p>
+                        <div className="gap-4 mt-4">
+                            <h2>剧集</h2>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                {
+                                    video.sources.map((source: any) => (
+                                        <Link
+                                            href={`/video/${source.vid}`} key={source.id}
+                                            className={`border border-gray-300 rounded px-2 py-1 text-sm ${source.id === video.source_id ? 'bg-red-400 border-red-400' : ''}`}
+                                        >
+                                            <span>{source.name}</span>
+                                        </Link>
+                                    ))
+                                }
+                            </div>
+                        </div>
+                        <div className="flex gap-4 mt-4">
+                            <button
+                                className="flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors">
+                                <ThumbsUp className="w-4 h-4"/>
+                                点赞
+                            </button>
+                            <button
+                                className="flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors">
+                                <Share2 className="w-4 h-4"/>
+                                分享
+                            </button>
                         </div>
                     </div>
-                    <div className="flex gap-4 mt-4">
-                        <button
-                            className="flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors">
-                            <ThumbsUp className="w-4 h-4"/>
-                            点赞
-                        </button>
-                        <button
-                            className="flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors">
-                            <Share2 className="w-4 h-4"/>
-                            分享
-                        </button>
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* 相关视频 */}
-                    <div className="lg:col-span-2">
-                        <h2 className="text-xl font-bold mb-4">相关推荐</h2>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            {relatedVideos.map((vod: any) => (
-                                <MovieCard key={vod.id} movie={vod}/>
-                            ))}
-                        </div>
-                    </div>
-
+                    <AdsenseBanner dataAdSlot="9313405668"/>
                     {/* 评论区 */}
                     <div>
                         <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
@@ -124,11 +114,11 @@ export default async function VideoPage({params}: { params: { vid: string } }) {
 
                         {/* 发表评论 */}
                         <form className="mb-6">
-              <textarea
-                  placeholder="发表你的评论..."
-                  className="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white placeholder-gray-500 focus:outline-none focus:border-red-500 resize-none"
-                  rows={3}
-              />
+                              <textarea
+                                  placeholder="发表你的评论..."
+                                  className="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white placeholder-gray-500 focus:outline-none focus:border-red-500 resize-none"
+                                  rows={3}
+                              />
                             <button
                                 type="button"
                                 className="mt-2 w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg transition-colors"
@@ -155,6 +145,17 @@ export default async function VideoPage({params}: { params: { vid: string } }) {
                                         <button className="hover:text-red-500 transition-colors">回复</button>
                                     </div>
                                 </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+                <div className="w-full md:w-1/4">
+                    {/* 相关视频 */}
+                    <div className="lg:col-span-2">
+                        <h2 className="text-xl font-bold mb-4">相关推荐</h2>
+                        <div className="grid grid-cols-2 gap-4">
+                            {relatedVideos.map((vod: any) => (
+                                <MovieCard key={vod.id} movie={vod}/>
                             ))}
                         </div>
                     </div>

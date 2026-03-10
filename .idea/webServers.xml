@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="62f4da1f-ffbe-44ea-8a00-c6da84bd2b1f" name="aliyun">
+        <fileTransfer rootFolder="/vdata/webroot/next/movie-next" accessType="SFTP" host="8.208.121.136" port="22" sshConfigId="e51d7abd-f25a-4658-9b27-928314191f1a" sshConfig="root@8.208.121.136:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

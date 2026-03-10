@@ -1,6 +1,7 @@
 import Carousel from '../components/Carousel';
 import MovieList from '../components/MovieList';
 import {apiGet} from "@/lib/api";
+import AdsenseBanner from "@/components/AdsenseBanner";
 
 const getLatestMovies = async () => {
     const res = await apiGet('/movies', {offset: 0, limit: 12, types: 'film,variety,documentary,anime,tv'});
@@ -33,6 +34,7 @@ export default async function Home() {
                 <MovieList title="最近更新" movies={latestMovies}/>
                 <MovieList title="热门影片" movies={popularMovies}/>
             </div>
+            <AdsenseBanner dataAdSlot="9313405668"/>
         </>
     );
 }

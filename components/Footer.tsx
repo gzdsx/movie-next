@@ -62,7 +62,7 @@ export default function Footer() {
 
                 {/* 版权信息 */}
                 <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-                    <p>&copy; {new Date().getFullYear()} MovieHub. All rights reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} xiaomavv. All rights reserved.</p>
                 </div>
             </div>
         </footer>
