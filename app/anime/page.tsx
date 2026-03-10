@@ -13,14 +13,24 @@ export const metadata: Metadata = {
 };
 
 const getSlides = async () => {
-    const res = await apiGet('/swipers/5/slides');
-    return [...res.data.items];
+    try {
+        const res = await apiGet('/swipers/5/slides');
+        return [...res.data.items];
+    }catch (e) {
+        console.log(e);
+        return [];
+    }
 };
 
 const getMovies = async (page: number, params?: any) => {
-    const offset = (page - 1) * 30;
-    const res = await apiGet('/movies', {...params, type: 'anime', offset, limit: 30});
-    return res.data;
+    try {
+        const offset = (page - 1) * 30;
+        const res = await apiGet('/movies', {...params, type: 'anime', offset, limit: 30});
+        return res.data;
+    }catch (e) {
+        console.log(e);
+        return {items: [], total: 0};
+    }
 };
 
 export default async function Page({searchParams}: any) {

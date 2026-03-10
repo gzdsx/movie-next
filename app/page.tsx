@@ -4,23 +4,38 @@ import {apiGet} from "@/lib/api";
 import AdsenseBanner from "@/components/AdsenseBanner";
 
 const getLatestMovies = async () => {
-    const res = await apiGet('/movies', {offset: 0, limit: 12, types: 'film,variety,documentary,anime,tv'});
-    return res.data.items;
+    try {
+        const res = await apiGet('/movies', {offset: 0, limit: 12, types: 'film,variety,documentary,anime,tv'});
+        return res.data.items;
+    }catch (e) {
+        console.log(e);
+        return [];
+    }
 };
 
 const getPopularMovies = async () => {
-    const res = await apiGet('/movies', {
-        offset: 0,
-        limit: 12,
-        orderby: 'views',
-        types: 'film,variety,documentary,anime,tv'
-    });
-    return res.data.items;
+    try {
+        const res = await apiGet('/movies', {
+            offset: 0,
+            limit: 12,
+            orderby: 'views',
+            types: 'film,variety,documentary,anime,tv'
+        });
+        return res.data.items;
+    }catch (e) {
+        console.log(e);
+        return [];
+    }
 };
 
 const getSlides = async () => {
-    const res = await apiGet('/swipers/1/slides');
-    return [...res.data.items];
+    try {
+        const res = await apiGet('/swipers/1/slides');
+        return [...res.data.items];
+    }catch (e) {
+        console.log(e);
+        return [];
+    }
 };
 
 export default async function Home() {

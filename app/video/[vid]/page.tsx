@@ -7,13 +7,23 @@ import {Metadata} from "next";
 import AdsenseBanner from "@/components/AdsenseBanner";
 
 const getVideo = async (vid: string) => {
-    const res = await apiGet(`/movies/${vid}`);
-    return res.data;
+    try {
+        const res = await apiGet(`/movies/${vid}`);
+        return res.data;
+    }catch (e) {
+        console.error(e);
+        return {};
+    }
 }
 
 const getRelatedVideos = async (id: number) => {
-    const res = await apiGet(`/movies/${id}/related`, {limit: 10});
-    return res.data.items;
+    try {
+        const res = await apiGet(`/movies/${id}/related`, {limit: 10});
+        return res.data.items;
+    }catch (e) {
+        console.error(e);
+        return [];
+    }
 }
 
 export async function generateMetadata({params}: any): Promise<Metadata> {
@@ -23,7 +33,7 @@ export async function generateMetadata({params}: any): Promise<Metadata> {
     const movie = await getVideo(vid);
 
     return {
-        title: `${movie.title} - 小马影视`,
+        title: `${movie.title + '-' + movie.source_name} - 小马影视`,
         keywords: `导演:${movie.director},演员:${movie.main_actor}`,
         description: `${movie.title}全集高清观看，剧情介绍：${movie.description.slice(0, 100)}...`,
         openGraph: {

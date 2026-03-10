@@ -12,9 +12,14 @@ export const metadata: Metadata = {
 };
 
 const getMovies = async (page: number, params?: any) => {
-    const offset = (page - 1) * 30;
-    const res = await apiGet('/movies', {...params, type: 'film', offset, limit: 30});
-    return res.data;
+    try {
+        const offset = (page - 1) * 30;
+        const res = await apiGet('/movies', {...params, type: 'film', offset, limit: 30});
+        return res.data;
+    }catch (e) {
+        console.log(e);
+        return {items: [], total: 0};
+    }
 };
 
 export default async function Page({searchParams}: any) {
