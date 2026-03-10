@@ -149,7 +149,7 @@ export default async function VideoPage({params}: { params: { vid: string } }) {
                         </div>
                     </div>
                 </div>
-                <div className="w-full md:w-1/4">
+                <div className="w-full md:w-140">
                     {/* 相关视频 */}
                     <div className="lg:col-span-2">
                         <h2 className="text-xl font-bold mb-4">相关推荐</h2>
