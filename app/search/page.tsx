@@ -19,7 +19,7 @@ const getMovies = async (page: number, params?: any) => {
 
 export default async function Page({searchParams}: any) {
     const {page = 1, q = '', orderby = ''} = await searchParams;
-    const {items: movies, total} = await getMovies(1, {q, orderby});
+    const {items: movies, total} = await getMovies(page, {q, orderby});
     return (
         <>
             <div className="flex items-center justify-center mt-8">

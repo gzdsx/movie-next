@@ -26,7 +26,7 @@ const getMovies = async (page: number, params?: any) => {
 export default async function Page({searchParams}: any) {
     const slides: Slide[] = await getSlides();
     const {page = 1, tag = '', year = '', region = ''} = await searchParams;
-    const {items: movies, total} = await getMovies(1, {tag, year, region});
+    const {items: movies, total} = await getMovies(page, {tag, year, region});
     return (
         <>
             <Carousel slides={slides}/>
