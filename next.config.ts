@@ -15,8 +15,8 @@ const nextConfig: NextConfig = {
                 destination: 'http://xiaomavv.localhost/api/:path*',
             },
             {
-                source: '/vue-admin/:path*',
-                destination: 'http://xiaomavv.localhost/vue-admin/:path*',
+                source: '/storage/:path*',
+                destination: 'https://next.xiaomavv.com/storage/:path*',
             }
         ];
     },
