@@ -1,10 +1,10 @@
 import {Star, ThumbsUp, MessageCircle, Share2} from 'lucide-react';
 import {apiGet} from "@/lib/api";
-import VideoPlayer from "react-player";
 import Link from "next/link";
 import {MovieCard} from "@/components/MovieCard";
 import {Metadata} from "next";
 import AdsenseBanner from "@/components/AdsenseBanner";
+import VideoPlayer from "@/components/VideoPlayer";
 
 const getVideo = async (vid: string) => {
     try {
@@ -55,14 +55,7 @@ export default async function VideoPage({params}: { params: { vid: string } }) {
                     {/* 视频播放器 */}
                     <div className="relative bg-gray-900 rounded-lg overflow-hidden mb-8">
                         <div className="aspect-video bg-black flex items-center justify-center">
-                            <VideoPlayer
-                                src={video.source_src}
-                                playing
-                                controls
-                                preload={'auto'}
-                                playsInline
-                                style={{width: '100%', height: '100%'}}
-                            />
+                            <VideoPlayer src={video.source_src} currentSourceId={video.source_id} sources={video.sources}/>
                         </div>
                     </div>
                     {/* 视频信息 */}

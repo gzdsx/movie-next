@@ -40,6 +40,16 @@ export default function RootLayout({
             {children}
             <Footer/>
         </ConfigProvider>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-VBSMKS0Q1P"></script>
+        <script>
+            {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-VBSMKS0Q1P');
+            `}
+        </script>
         </body>
         </html>
     );

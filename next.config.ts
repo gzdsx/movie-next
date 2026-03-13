@@ -1,7 +1,11 @@
-import type { NextConfig } from "next";
+import type {NextConfig} from "next";
 
 const nextConfig: NextConfig = {
     /* config options here */
+    output: 'standalone', // 减少运行时依赖
+    reactStrictMode: true,
+    typescript: {ignoreBuildErrors: true},
+    images: {unoptimized: process.env.NODE_ENV === 'production'},
     async rewrites() {
         return [
             {
@@ -9,10 +13,6 @@ const nextConfig: NextConfig = {
                 source: '/api/:path*',
                 // 转发到你的 Laravel 开发服务器
                 destination: 'http://xiaomavv.localhost/api/:path*',
-            },
-            {
-                source: '/storage/:path*',
-                destination: 'http://xiaomavv.localhost/storage/:path*',
             },
             {
                 source: '/vue-admin/:path*',

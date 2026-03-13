@@ -7,7 +7,7 @@ const getLatestMovies = async () => {
     try {
         const res = await apiGet('/movies', {offset: 0, limit: 12, types: 'film,variety,documentary,anime,tv'});
         return res.data.items;
-    }catch (e) {
+    } catch (e) {
         console.log(e);
         return [];
     }
@@ -18,11 +18,11 @@ const getPopularMovies = async () => {
         const res = await apiGet('/movies', {
             offset: 0,
             limit: 12,
-            orderby: 'views',
+            orderby: 'random',
             types: 'film,variety,documentary,anime,tv'
         });
         return res.data.items;
-    }catch (e) {
+    } catch (e) {
         console.log(e);
         return [];
     }
@@ -30,13 +30,17 @@ const getPopularMovies = async () => {
 
 const getSlides = async () => {
     try {
-        const res = await apiGet('/swipers/1/slides');
+        const res = await apiGet('/swipers/1/slides', {}, {
+            next: {revalidate: 0}
+        });
         return [...res.data.items];
-    }catch (e) {
+    } catch (e) {
         console.log(e);
         return [];
     }
 };
+
+export const revalidate = 0;
 
 export default async function Home() {
     const latestMovies = await getLatestMovies();
