@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 import { Search } from 'lucide-react';
+import {useState} from "react";
 
 const navItems = [
     {name: '首页', href: '/'},
@@ -14,54 +15,59 @@ const navItems = [
     {name: '体育赛事', href: '/match'},
 ];
 
-export default function Navbar() {
+const Navbar = () => {
     const pathname = usePathname();
+    const [searchQuery, setSearchQuery] = useState('');
 
     return (
-        <nav className="bg-gray-900 p-4">
-            <div className="container mx-auto flex justify-between items-center gap-x-4">
-                <Link href="/" className="text-white text-xl font-bold mr-8">
-                    <img src={"/logo.png"} alt={"小马影视"} className="h-10 inline-block"/>
-                </Link>
-                <ul className="flex grow gap-x-4">
-                    {navItems.map((item) => (
-                        <li key={item.name}>
-                            <Link href={item.href}
-                                  className={`hover:text-yellow-500 ${item.href === pathname ? 'text-red-500' : 'text-white'}`}>
+        <nav className="min-h-16 relative border-b border-gray-800 hidden md:block">
+            <div className="fixed w-full px-4 bg-black/95 z-50">
+                <div className="flex items-center justify-between h-16">
+                    <div className="flex items-center space-x-2">
+                        <Link href="/">
+                            <img src="/logo.png" alt="小马影视" className="w-32 h-auto"/>
+                        </Link>
+                    </div>
+
+                    <div className="hidden md:flex items-center space-x-1">
+                        {navItems.map((item) => (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                    pathname === item.href
+                                        ? 'text-red-500 bg-red-500/10'
+                                        : 'text-gray-300 hover:text-white hover:bg-gray-800'
+                                }`}
+                            >
                                 {item.name}
                             </Link>
-                        </li>
-                    ))}
-                </ul>
-                <form method="get" action="/search">
-                    <div className="relative mx-4">
-                        <input
-                            type="text"
-                            name={'q'}
-                            placeholder="搜索影片..."
-                            className="bg-gray-800 text-white text-sm px-4 py-1.5 rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-red-500"
-                        />
-                        <button
-                            type="submit"
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500">
-                            <Search size={20}/>
-                        </button>
+                        ))}
                     </div>
-                </form>
 
-                <ul className={"flex gap-x-4"}>
-                    <li>
-                        <Link href="/login" className="text-white hover:text-gray-300">
-                            登录
-                        </Link>
-                    </li>
-                    <li>
-                        <Link href="/register" className="text-white hover:text-gray-300">
-                            注册
-                        </Link>
-                    </li>
-                </ul>
+                    <div className="flex items-center space-x-4">
+                        <form
+                            method="get"
+                            action="/search"
+                            autoComplete="off"
+                            className="hidden sm:flex items-center bg-gray-900 rounded-full px-4 py-2 border border-gray-800">
+                            <input
+                                type="text"
+                                placeholder="搜索影片..."
+                                defaultValue={searchQuery}
+                                name="q"
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="bg-transparent border-none outline-none text-white text-sm ml-2 w-48"
+                            />
+                            <button>
+                                <Search className="w-4 h-4 text-gray-400"/>
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </nav>
     );
-}
+};
+
+export default Navbar;

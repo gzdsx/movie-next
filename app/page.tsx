@@ -30,9 +30,7 @@ const getPopularMovies = async () => {
 
 const getSlides = async () => {
     try {
-        const res = await apiGet('/swipers/1/slides', {}, {
-            next: {revalidate: 0}
-        });
+        const res = await apiGet('/swipers/1/slides');
         return [...res.data.items];
     } catch (e) {
         console.log(e);
@@ -40,7 +38,7 @@ const getSlides = async () => {
     }
 };
 
-export const revalidate = 0;
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
     const latestMovies = await getLatestMovies();

@@ -3,6 +3,7 @@ import {ConfigProvider,theme} from 'antd';
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import NavMobile from "@/components/NavMobile";
 
 export const metadata: Metadata = {
     title: "小马影视-电影电视剧高清完整视频免费在线观看",
@@ -10,18 +11,25 @@ export const metadata: Metadata = {
     description: "美剧,韩剧,日剧,泰剧,泰剧,大陆剧,全球综艺和电影第一时间为您呈现,10万+全球最新的影视作品免费在线观看.",
 };
 
+export const viewport = {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false
+}
+
 export default function RootLayout({
                                        children,
                                    }: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className="dark">
+        <html lang="en" className="dark w-full overflow-x-hidden relative">
         <head>
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306822352785197"
                     crossOrigin="anonymous"></script>
         </head>
-        <body className={`bg-black text-white min-h-screen`}>
+        <body className={`bg-black text-white min-h-screen w-full overflow-x-hidden relative overscroll-x-none`}>
         <ConfigProvider theme={{
             algorithm: theme.darkAlgorithm,
             components: {
@@ -37,6 +45,7 @@ export default function RootLayout({
             }
         }}>
             <Navbar/>
+            <NavMobile/>
             {children}
             <Footer/>
         </ConfigProvider>

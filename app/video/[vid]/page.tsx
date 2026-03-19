@@ -34,7 +34,7 @@ export async function generateMetadata({params}: any): Promise<Metadata> {
 
     return {
         title: `${movie.title + '-' + movie.source_name} - 小马影视`,
-        keywords: `导演:${movie.director},演员:${movie.main_actor}`,
+        keywords: `导演:${movie.director},主演:${movie.main_actor}`,
         description: `${movie.title}全集高清观看，剧情介绍：${movie.description.slice(0, 100)}...`,
         openGraph: {
             images: [movie.thumbnail], // 社交媒体分享时的预览图

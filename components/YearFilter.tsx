@@ -2,6 +2,7 @@
 import {useRouter, usePathname, useSearchParams} from 'next/navigation';
 
 const items = [
+    '2026',
     '2025',
     '2024',
     '2023',

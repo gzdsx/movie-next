@@ -5,7 +5,7 @@ export default function Footer() {
     return (
         <footer className="bg-gray-900 text-gray-300 py-12 border-t border-gray-800">
             <div className="container mx-auto px-4">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                     {/* 品牌信息 */}
                     <div className="col-span-1 md:col-span-1">
                         <h3 className="text-white text-xl font-bold mb-4">小马影视</h3>

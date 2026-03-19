@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 const getMovies = async (page: number, params?: any) => {
     try {
         const offset = (page - 1) * 30;
-        const res = await apiGet('/movies', {...params, type: 'film', offset, limit: 30});
+        const res = await apiGet('/movies', {...params, offset, limit: 30});
         return res.data;
     }catch (e) {
         console.log(e);
@@ -27,22 +27,20 @@ export default async function Page({searchParams}: any) {
     const {items: movies, total} = await getMovies(page, {q, orderby});
     return (
         <>
-            <div className="flex items-center justify-center mt-8">
-                <form method="get" action="/search" className="w-full md:max-w-1/2">
-                    <div className="relative w-full">
-                        <input
-                            type="text"
-                            name={'q'}
-                            defaultValue={q}
-                            placeholder="搜索影片..."
-                            className="bg-gray-800 text-white px-4 py-2.5 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-red-500"
-                        />
-                        <button
-                            type="submit"
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500">
-                            <Search size={20}/>
-                        </button>
-                    </div>
+            <div className="container mx-auto px-4 py-10">
+                <form method="get" action="/search" autoComplete="off" className="grow flex items-center justify-center md:max-w-1/2 mx-auto relative">
+                    <input
+                        type="text"
+                        name={'q'}
+                        defaultValue={q}
+                        placeholder="搜索影片..."
+                        className="bg-gray-800 text-white px-4 py-2.5 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-red-500"
+                    />
+                    <button
+                        type="submit"
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500">
+                        <Search size={20}/>
+                    </button>
                 </form>
             </div>
             <div className="container mx-auto px-4 py-8">
