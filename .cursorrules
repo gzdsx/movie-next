@@ -1,0 +1,158 @@
+# MovieHub 项目开发规则
+
+## 技术栈
+- 框架: Next.js 16 (App Router)
+- 语言: TypeScript
+- 样式: Tailwind CSS
+- 图标: Lucide React
+- 包管理器: npm
+
+## 项目结构规范
+
+### 目录结构
+```
+src/
+├── app/                    # Next.js App Router 页面
+│   ├── page.tsx           # 首页
+│   ├── layout.tsx         # 根布局
+│   ├── globals.css        # 全局样式
+│   ├── movies/            # 电影分类页
+│   ├── tv/                # 电视剧分类页
+│   ├── variety/           # 综艺分类页
+│   ├── anime/             # 动漫分类页
+│   ├── documentary/       # 纪录片分类页
+│   ├── sports/            # 体育赛事分类页
+│   ├── video/[id]/        # 视频播放详情页 (动态路由)
+│   ├── login/             # 登录页
+│   └── register/          # 注册页
+└── components/            # 可复用组件
+    ├── Navbar.tsx         # 导航栏组件
+    ├── HeroSlider.tsx     # 首页轮播图组件
+    ├── MovieCard.tsx      # 影片卡片组件
+    ├── MovieSection.tsx   # 影片区块组件
+    ├── FilterBar.tsx      # 筛选栏组件
+    ├── VideoPlayer.tsx    # 视频播放器组件
+    ├── CommentSection.tsx # 评论区域组件
+    └── Footer.tsx         # 页脚组件
+```
+
+## 编码规范
+
+### 1. 组件规范
+- 所有组件使用 TypeScript 编写
+- 组件文件使用 PascalCase 命名 (如: `MovieCard.tsx`)
+- 组件导出使用默认导出
+- 客户端组件必须添加 `'use client'` 指令
+
+### 2. 样式规范
+- 使用 Tailwind CSS 进行样式编写
+- 遵循移动优先的响应式设计原则
+- 使用 Tailwind 的响应式前缀: `sm:`, `md:`, `lg:`, `xl:`
+- 主题色: 红色 (`bg-red-600`, `text-red-600`, `hover:bg-red-700`)
+- 背景色: 黑色系 (`bg-black`, `bg-gray-900`, `bg-gray-800`)
+
+### 3. TypeScript 规范
+- 为所有 props 定义接口类型
+- 使用明确的类型定义，避免 `any`
+- 接口使用 PascalCase 命名并添加 `Props` 后缀 (如: `MovieCardProps`)
+
+### 4. Next.js 规范
+- 使用 App Router (不是 Pages Router)
+- 使用 `Link` 组件进行页面导航，不使用 `<a>` 标签
+- 使用 `usePathname` 获取当前路径
+- 动态路由使用 `[id]` 文件夹命名
+
+### 5. 组件组织
+- 每个页面由多个可复用组件组成
+- 组件职责单一，避免过大组件
+- 通用组件放在 `components` 目录
+- 页面特定逻辑放在对应的页面文件中
+
+## 设计规范
+
+### 1. 主题配色
+- 主背景: `#0a0a0a` (黑色)
+- 次级背景: `#1a1a1a` (深灰)
+- 主色调: `#dc2626` (红色)
+- 文字颜色: `#ffffff` (白色), `#9ca3af` (灰色)
+
+### 2. 交互效果
+- 按钮 hover 效果: 使用 `hover:` 前缀
+- 过渡动画: `transition-colors`, `transition-transform`
+- 缩放效果: `hover:scale-105` 或 `hover:scale-110`
+- 卡片圆角: `rounded-lg` (8px)
+
+### 3. 响应式断点
+- `sm`: 640px
+- `md`: 768px
+- `lg`: 1024px
+- `xl`: 1280px
+
+## 开发流程
+
+### 1. 添加新页面
+1. 在 `src/app/` 下创建新文件夹
+2. 创建 `page.tsx` 文件
+3. 导入必要的组件 (Navbar, Footer)
+4. 实现 UI 和逻辑
+
+### 2. 添加新组件
+1. 在 `src/components/` 下创建组件文件
+2. 定义 Props 接口
+3. 实现组件逻辑
+4. 在需要的页面中导入使用
+
+### 3. 数据处理
+- 当前使用模拟数据 (Mock Data)
+- 真实项目应接入 API 接口
+- 建议在 `src/lib/` 或 `src/services/` 中封装 API 调用
+
+## 功能模块说明
+
+### 导航栏 (Navbar)
+- 固定在页面顶部
+- 包含 logo、导航链接、搜索、登录按钮
+- 移动端适配为可滚动的横向导航
+
+### 轮播图 (HeroSlider)
+- 自动轮播，5秒间隔
+- 支持手动切换
+- 显示影片标题、描述、年份、评分
+- "立即观看" 按钮
+
+### 影片卡片 (MovieCard)
+- 海报图片、标题、年份、评分
+- hover 效果: 图片缩放、播放按钮显示
+- 点击跳转到详情页
+
+### 筛选栏 (FilterBar)
+- 类型、年份、国家三级筛选
+- 选中的筛选项高亮显示
+- 筛选变化时触发回调
+
+### 视频播放器 (VideoPlayer)
+- 播放/暂停控制
+- 进度条拖动
+- 音量调节
+- 全屏功能
+- 时间显示
+
+### 评论区域 (CommentSection)
+- 评论列表展示
+- 发表评论表单
+- 点赞/踩功能
+- 用户头像、昵称、时间显示
+
+## 性能优化建议
+
+1. 图片优化: 使用 Next.js `<Image>` 组件
+2. 代码分割: 动态导入大型组件 (`next/dynamic`)
+3. 懒加载: 长列表使用虚拟滚动
+4. 缓存策略: 合理使用 `revalidate`
+
+## 部署说明
+
+- 构建命令: `npm run build`
+- 启动命令: `npm start`
+- 环境变量: 使用 `.env.local` 文件
+- 部署平台: 支持 Vercel、CloudStudio 等

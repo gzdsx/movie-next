@@ -3,7 +3,7 @@
 import {auth} from "@/auth"; // 服务端获取 session
 import {getSession} from "next-auth/react"; // 客户端获取 session
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const BASE_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
 interface FetchOptions extends RequestInit {
     data?: any;
@@ -18,36 +18,36 @@ async function getAuthSession() {
     return await getSession();
 }
 
-export async function apiFetch(endpoint: string, {data, params, ...customConfig}: FetchOptions = {}) {
+export async function apiFetch(endpoint: string, {params, ...customConfig}: FetchOptions = {}) {
     // 1. 处理 URL 参数
     const queryString = params ? `?${new URLSearchParams(params).toString()}` : '';
-    const url = `${BASE_URL}${endpoint}${queryString}`;
+    const url = `${BASE_API_URL}${endpoint}${queryString}`;
 
     // 2. 默认 Headers 配置
-    const headers: HeadersInit = {
-        'Content-Type': 'application/json',
+    const defaultHeaders: Record<string, string> = {
         'Accept': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest', // 必须！让 Laravel 识别为 AJAX 请求
     };
+
+    // 关键：非 FormData 自动设为 JSON 类型
+    if (!(customConfig.body instanceof FormData)) {
+        defaultHeaders['Content-Type'] = 'application/json';
+    }
 
     // 3. 自动注入 Token (如果是 Token 认证方案)
     // 如果是 Sanctum Cookie 方案，fetch 会自动携带凭证，无需手动加 Authorization
     const session = await getAuthSession();
     const token = (session as any)?.accessToken;
-    if (token) headers.Authorization = `Bearer ${token}`;
+    if (token) defaultHeaders.Authorization = `Bearer ${token}`;
 
     const config: RequestInit = {
-        method: data ? 'POST' : 'GET',
         ...customConfig,
         headers: {
-            ...headers,
+            ...defaultHeaders,
             ...customConfig.headers,
         },
         // 处理 Sanctum/Passport 的跨域凭证
         credentials: 'include',
     };
-
-    if (data) config.body = JSON.stringify(data);
 
     try {
         const response = await fetch(url, config);
@@ -82,13 +82,27 @@ export function apiGet(endpoint: string, params?: Record<string, any>, customCon
 }
 
 export function apiPost(endpoint: string, data?: any, customConfig?: FetchOptions) {
-    return apiFetch(endpoint, {...customConfig, data, method: 'POST'});
+    const requestConfig = {...customConfig};
+    if (data instanceof FormData) {
+        requestConfig.body = data;
+    } else {
+        requestConfig.body = JSON.stringify(data);
+    }
+    return apiFetch(endpoint, {...requestConfig, method: 'POST'});
 }
 
 export function apiPut(endpoint: string, data?: any, customConfig?: FetchOptions) {
-    return apiFetch(endpoint, {...customConfig, data, method: 'PUT'});
+    return apiFetch(endpoint, {
+        ...customConfig,
+        method: 'PUT',
+        body: JSON.stringify(data)
+    });
 }
 
 export function apiDelete(endpoint: string, data?: any, customConfig?: FetchOptions) {
-    return apiFetch(endpoint, {...customConfig, data, method: 'DELETE'});
+    const requestConfig = {...customConfig};
+    if (data) {
+        requestConfig.body = JSON.stringify(data);
+    }
+    return apiFetch(endpoint, {...requestConfig, method: 'DELETE'});
 }

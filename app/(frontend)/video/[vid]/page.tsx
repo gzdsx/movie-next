@@ -85,7 +85,7 @@ export default async function VideoPage({params}: { params: { vid: string } }) {
                                 {
                                     video.sources.map((source: any) => (
                                         <Link
-                                            href={`/video/${source.vid}`} key={source.id}
+                                            href={`/app/（movie）/video/${source.vid}`} key={source.id}
                                             className={`border border-gray-300 rounded px-2 py-1 text-sm ${source.id === video.source_id ? 'bg-red-400 border-red-400' : ''}`}
                                         >
                                             <span>{source.name}</span>

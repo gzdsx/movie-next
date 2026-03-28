@@ -1,9 +1,10 @@
-import type {Metadata} from "next";
-import {ConfigProvider,theme} from 'antd';
-import "./globals.css";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import {ConfigProvider, theme} from "antd";
+import Navbar from "@/components/Navbar";
 import NavMobile from "@/components/NavMobile";
+import Footer from "@/components/Footer";
+import {Metadata} from "next";
+import {LocaleProvider} from "@/contexts/LocaleContext";
+import "./globals.css";
 
 export const metadata: Metadata = {
     title: "小马影视-电影电视剧高清完整视频免费在线观看",
@@ -24,31 +25,33 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className="dark w-full overflow-x-hidden relative">
+        <html lang="zh" className="dark w-full overflow-x-hidden relative">
         <head>
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306822352785197"
                     crossOrigin="anonymous"></script>
         </head>
         <body className={`bg-black text-white min-h-screen w-full overflow-x-hidden relative overscroll-x-none`}>
-        <ConfigProvider theme={{
-            algorithm: theme.darkAlgorithm,
-            components: {
-                Pagination: {
-                    // 针对分页组件的细粒度调整
-                    itemBg: '#111828',           // 按钮背景设为纯黑
-                    itemActiveBg: '#1677ff',     // 激活项背景
-                    itemLinkBg: '#000000',       // 上一页/下一页背景
-                    colorText: '#ffffff',        // 文字设为纯白
-                    colorTextDisabled: '#4d4d4d',
-                    itemActiveColor:'#ffffff'// 禁用状态文字颜色
-                },
-            }
-        }}>
-            <Navbar/>
-            <NavMobile/>
-            {children}
-            <Footer/>
-        </ConfigProvider>
+        <LocaleProvider>
+            <ConfigProvider theme={{
+                algorithm: theme.darkAlgorithm,
+                components: {
+                    Pagination: {
+                        // 针对分页组件的细粒度调整
+                        itemBg: '#111828',           // 按钮背景设为纯黑
+                        itemActiveBg: '#1677ff',     // 激活项背景
+                        itemLinkBg: '#000000',       // 上一页/下一页背景
+                        colorText: '#ffffff',        // 文字设为纯白
+                        colorTextDisabled: '#4d4d4d',
+                        itemActiveColor:'#ffffff'// 禁用状态文字颜色
+                    },
+                }
+            }}>
+                <Navbar/>
+                <NavMobile/>
+                {children}
+                <Footer/>
+            </ConfigProvider>
+        </LocaleProvider>
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-VBSMKS0Q1P"></script>
         <script>
             {`

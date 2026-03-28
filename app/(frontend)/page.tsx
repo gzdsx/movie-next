@@ -1,5 +1,5 @@
-import Carousel from '../components/Carousel';
-import MovieList from '../components/MovieList';
+import Carousel from '../../components/Carousel';
+import MovieList from '../../components/MovieList';
 import {apiGet} from "@/lib/api";
 import AdsenseBanner from "@/components/AdsenseBanner";
 
