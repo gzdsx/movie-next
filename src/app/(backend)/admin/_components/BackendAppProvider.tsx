@@ -1,8 +1,8 @@
 'use client';
 
-import React, {createContext, useContext, useState, useEffect, useCallback} from 'react';
+import React, {createContext, useContext, useState, useCallback} from 'react';
 import {createPortal} from 'react-dom';
-import MediaLibrary, {MediaType} from "../_components/MediaLibrary";
+import MediaLibrary, {MediaType} from "./MediaLibrary";
 
 interface MediaLibraryOptions {
     multiple?: boolean;
@@ -63,6 +63,8 @@ export function BackendAppProvider({children}: { children: React.ReactNode }) {
 
 export function useBackendApp() {
     const context = useContext(BackendAppContext);
-    if (!context) throw new Error('useBackendApp must be used inside BackendAppProvider');
+    if (!context) {
+        throw new Error('useBackendApp must be used inside BackendAppProvider');
+    }
     return context;
 }
