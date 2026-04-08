@@ -6,7 +6,7 @@ export default auth((req) => {
     console.log('req:', req.auth);
     const isLoggedIn = !!req.auth;
     const {nextUrl} = req;
-    const capabilities = req.auth?.user?.capabilities || []; // 假设你在 session 中存储了 role
+    const capabilities = req.auth?.user?.capabilities || [];
 
     const isAdminRoute = nextUrl.pathname.startsWith("/admin");
     const isAuthRoute = nextUrl.pathname.startsWith("/dashboard");
