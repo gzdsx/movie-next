@@ -6,6 +6,8 @@
 .pnp.*
 .yarn/*
 .idea
+.codebuddy
+.cursorrules
 .next
 !.yarn/patches
 !.yarn/plugins
