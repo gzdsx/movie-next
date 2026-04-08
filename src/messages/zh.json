@@ -121,7 +121,10 @@
         "batchOperation": "批量操作",
         "notify": "通知",
         "backToFrontend": "返回前台",
-        "accountSettings": "账户设置"
+        "accountSettings": "账户设置",
+        "mailSettings": "邮件设置",
+        "movieFeedbacks": "影片反馈"
+
     },
     "category": {
         "types": "影片类型",

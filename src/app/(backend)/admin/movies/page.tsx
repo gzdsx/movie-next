@@ -19,7 +19,7 @@ import {
 import type {ColumnsType} from 'antd/es/table';
 import {apiGet, apiDelete, apiPut} from "@/lib/backendApi";
 import Link from "next/link";
-import {useBackendApp} from "@/app/(backend)/admin/_components/BackendAppProvider";
+import {useRouter} from "next/navigation";
 
 const {Search} = Input;
 const {Option} = Select;
@@ -52,19 +52,14 @@ export default function MoviesManagement() {
     const [batchAction, setBatchAction] = useState<string>('');
 
     const {message} = App.useApp();
-    const {mediaLibrary} = useBackendApp();
+    const router = useRouter();
 
     const handleAdd = () => {
-        mediaLibrary.open({
-            multiple: true,
-            onSelect: (medias) => {
-                //console.log(medias);
-            }
-        });
+        router.push('/admin/movies/0/edit');
     };
 
     const handleEdit = (record: MovieType) => {
-
+        router.push(`/admin/movies/${record.id}/edit`);
     };
 
     const columns: ColumnsType<MovieType> = [
@@ -269,7 +264,7 @@ export default function MoviesManagement() {
                     columns={columns}
                     loading={loading}
                     pagination={false}
-                    rowKey={record => record.id}
+                    rowKey={record => 'movie_'+record.id}
                 />
                 <div className={'flex justify-between items-center mt-4'}>
                     <div className={'grow flex flex-row gap-x-4'}>

@@ -27,9 +27,7 @@ export default function RootLayout({
         <html lang="zh" className="w-full overflow-x-hidden relative">
         <body className={`bg-black text-white min-h-screen w-full overflow-x-hidden relative overscroll-x-none`}>
         <LocaleProvider>
-            <ConfigProvider theme={{
-
-            }}>
+            <ConfigProvider theme={{}}>
                 <AntdRegistry>
                     <SessionProvider>
                         <App>

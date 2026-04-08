@@ -121,7 +121,9 @@
     "batchOperation": "Batch Operation",
     "notify": "Notifications",
     "backToFrontend": "Back to Frontend",
-    "accountSettings": "Account Settings"
+    "accountSettings": "Account Settings",
+    "mailSettings": "Mail Settings",
+    "moveFeedbacks": "Move Feedbacks"
   },
   "category": {
     "types": "Movie Types",

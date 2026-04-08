@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Card,
     Form,
@@ -20,31 +20,30 @@ import {
     ReloadOutlined,
     SaveOutlined,
 } from '@ant-design/icons';
-import {apiGet} from "@/lib/api";
+import {getSettings, updateSettings} from "../_lib/settings";
 
 export default function SettingsPage() {
     const [form] = Form.useForm();
     const {message} = App.useApp();
+    const [defaultValues, setDefaultValues] = useState({});
 
-    const handleSave = () => {
-        console.log(form.getFieldsValue());
+    const handleSave = async () => {
+        const values = form.getFieldsValue();
+        await updateSettings(values);
         message.success('设置已保存');
     };
 
-    const fetchData = async () => {
-        const response = await apiGet('/settings');
-        const {sitename, keywords, description, admin_email} = response.data;
-        form.setFieldsValue({
-            sitename,
-            keywords,
-            description,
-            admin_email
-        });
-    }
-
     useEffect(() => {
-        fetchData();
-    }, []);
+        (async function () {
+            const {sitename, keywords, description, admin_email} = await getSettings();
+            form.setFieldsValue({
+                sitename,
+                keywords,
+                description,
+                admin_email
+            })
+        })()
+    }, [form]);
 
     return (
         <div>
@@ -100,7 +99,7 @@ export default function SettingsPage() {
                         <Col xs={24} md={12}>
                             <Form.Item
                                 label="允许用户注册"
-                                name="allowRegistration"
+                                name="allow_registration"
                                 valuePropName="checked"
                                 initialValue={true}
                             >
@@ -113,7 +112,7 @@ export default function SettingsPage() {
                         <Col xs={24} md={12}>
                             <Form.Item
                                 label="邮箱验证"
-                                name="requireEmailVerification"
+                                name="require_email_verification"
                                 valuePropName="checked"
                                 initialValue={true}
                             >
@@ -131,7 +130,7 @@ export default function SettingsPage() {
                         <Col xs={24} md={12}>
                             <Form.Item
                                 label="允许评论"
-                                name="allowComments"
+                                name="allow_comments"
                                 valuePropName="checked"
                                 initialValue={true}
                             >
@@ -144,7 +143,7 @@ export default function SettingsPage() {
                         <Col xs={24} md={12}>
                             <Form.Item
                                 label="评论审核"
-                                name="requireCommentApproval"
+                                name="require_comment_approval"
                                 valuePropName="checked"
                                 initialValue={false}
                             >
@@ -172,7 +171,7 @@ export default function SettingsPage() {
                         <Col xs={24} md={12}>
                             <Form.Item
                                 label="最大上传大小 (MB)"
-                                name="maxUploadSize"
+                                name="max_upload_Size"
                                 initialValue="500"
                             >
                                 <Input type="number" placeholder="请输入最大上传大小"/>
@@ -181,7 +180,7 @@ export default function SettingsPage() {
                         <Col xs={24} md={12}>
                             <Form.Item
                                 label="允许的视频格式"
-                                name="allowedVideoFormats"
+                                name="allowed_video_formats"
                                 initialValue="mp4, mkv, avi"
                             >
                                 <Input placeholder="多个格式用逗号分隔"/>
@@ -202,7 +201,7 @@ export default function SettingsPage() {
                 >
                     <Form.Item
                         label="系统通知"
-                        name="enableNotifications"
+                        name="enable_notifications"
                         valuePropName="checked"
                         initialValue={true}
                     >
@@ -224,7 +223,7 @@ export default function SettingsPage() {
                 >
                     <Form.Item
                         label="启用维护模式"
-                        name="maintenanceMode"
+                        name="maintenance_mode"
                         valuePropName="checked"
                         initialValue={false}
                     >

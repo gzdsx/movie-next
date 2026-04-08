@@ -22,7 +22,7 @@ import {
     TagsOutlined,
     BarChartOutlined,
     PieChartOutlined,
-    ToolOutlined,
+    ToolOutlined, MailOutlined, QuestionOutlined,
 } from '@ant-design/icons';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
@@ -40,7 +40,7 @@ export default function AdminLayoutClient({
 }) {
     const { t } = useTranslations('admin');
     const { t: tNav } = useTranslations('nav');
-    
+
     const [collapsed, setCollapsed] = useState(false);
     const pathname = usePathname();
     const {data:session} = useSession();
@@ -65,14 +65,9 @@ export default function AdminLayoutClient({
                     label: <Link href="/admin/movies">{t('movieManagement')}</Link>,
                 },
                 {
-                    key: '/admin/categories',
-                    icon: <AppstoreOutlined/>,
-                    label: <Link href="/admin/categories">{t('categoryManagement')}</Link>,
-                },
-                {
-                    key: '/admin/tags',
-                    icon: <TagsOutlined/>,
-                    label: <Link href="/admin/tags">{t('tagManagement')}</Link>,
+                    key: '/admin/movies/feedbacks',
+                    icon: <QuestionOutlined/>,
+                    label: <Link href="/admin/movies/feedbacks">{t('movieFeedbacks')}</Link>,
                 },
             ],
         },
@@ -121,15 +116,15 @@ export default function AdminLayoutClient({
             label: t('systemManagement'),
             children: [
                 {
-                    key: '/admin/settings',
+                    key: '/admin/settings/general',
                     icon: <ToolOutlined/>,
-                    label: <Link href="/admin/settings">{t('systemSettings')}</Link>,
+                    label: <Link href="/admin/settings/general">{t('systemSettings')}</Link>,
                 },
                 {
-                    key: '/admin/logs',
-                    icon: <FileTextOutlined/>,
-                    label: <Link href="/admin/logs">{t('operationLogs')}</Link>,
-                },
+                    key: '/admin/settings/mail',
+                    icon: <MailOutlined/>,
+                    label: <Link href="/admin/settings/mail">{t('mailSettings')}</Link>,
+                }
             ],
         },
     ];

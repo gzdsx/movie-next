@@ -456,23 +456,6 @@ export default function MediaLibrary({
                                                             {formatFileSize(item.size || 0)}
                                                         </div>
                                                     </div>
-
-                                                    {/* 删除按钮 */}
-                                                    <Button
-                                                        type="text"
-                                                        danger
-                                                        icon={<DeleteOutlined/>}
-                                                        size="small"
-                                                        onClick={(e) => handleDelete(e, item.id)}
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: 4,
-                                                            left: 4,
-                                                            opacity: 0,
-                                                            transition: 'opacity 0.3s'
-                                                        }}
-                                                        className="delete-btn"
-                                                    />
                                                 </div>
                                             </Col>
                                         ))}
