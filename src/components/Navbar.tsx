@@ -24,7 +24,7 @@ const Navbar = () => {
             <div className="fixed w-full px-4 bg-black/95 z-50">
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center space-x-2">
-                        <Link href="/">
+                        <Link href="/" prefetch={false}>
                             <img src="/logo.png" alt="小马影视" className="w-32 h-auto"/>
                         </Link>
                     </div>
@@ -34,6 +34,7 @@ const Navbar = () => {
                             <Link
                                 key={item.href}
                                 href={item.href}
+                                prefetch={false}
                                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                                     pathname === item.href
                                         ? 'text-red-500 bg-red-500/10'

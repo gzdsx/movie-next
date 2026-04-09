@@ -25,7 +25,7 @@ export default function Carousel({slides = []}: CarouselProps) {
         >
             {slides.map((slide: Slide, index) => (
                 <div key={slide.id} className="w-full h-[40vw] md:h-[30vw]">
-                    <Link key={slide.id} href={slide.link} target="_blank">
+                    <Link key={slide.id} href={slide.link} prefetch={false} target="_blank">
                         <img
                             key={index}
                             src={slide.thumbnail}
