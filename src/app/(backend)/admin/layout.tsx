@@ -1,5 +1,5 @@
 import AdminLayoutClient from './AdminLayoutClient';
-import {BackendAppProvider} from "./_components/BackendAppProvider";
+import {BackendAppProvider} from "../../../contexts/BackendAppProvider";
 
 export default function AdminRootLayout({
                                             children,

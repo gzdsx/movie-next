@@ -2,7 +2,7 @@
 
 import React, {createContext, useContext, useState, useCallback} from 'react';
 import {createPortal} from 'react-dom';
-import MediaLibrary, {MediaType} from "./MediaLibrary";
+import MediaLibrary, {MediaType} from "@/components/backend/MediaLibrary";
 
 interface MediaLibraryOptions {
     multiple?: boolean;

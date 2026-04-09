@@ -8,7 +8,6 @@ import {
     VideoCameraOutlined,
     UserOutlined,
     CommentOutlined,
-    AppstoreOutlined,
     LineChartOutlined,
     SettingOutlined,
     BellOutlined,
@@ -19,10 +18,10 @@ import {
     TeamOutlined,
     SafetyOutlined,
     FileTextOutlined,
-    TagsOutlined,
     BarChartOutlined,
     PieChartOutlined,
     ToolOutlined, MailOutlined, QuestionOutlined,
+    ReadOutlined, FormOutlined, UnorderedListOutlined,
 } from '@ant-design/icons';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
@@ -72,6 +71,40 @@ export default function AdminLayoutClient({
             ],
         },
         {
+            key: 'pages',
+            icon: <FileTextOutlined/>,
+            label: t('pageManagement'),
+            children: [
+                {
+                    key: '/admin/pages',
+                    icon: <FileTextOutlined/>,
+                    label: <Link href="/admin/pages">{t('allPages')}</Link>,
+                },
+                {
+                    key: '/admin/pages/create',
+                    icon: <FileTextOutlined/>,
+                    label: <Link href="/admin/pages/create">{t('addPage')}</Link>,
+                },
+            ],
+        },
+        {
+            key: 'posts',
+            icon: <ReadOutlined/>,
+            label: t('postManagement'),
+            children: [
+                {
+                    key: '/admin/posts',
+                    icon: <UnorderedListOutlined/>,
+                    label: <Link href="/admin/posts">{t('allPosts')}</Link>,
+                },
+                {
+                    key: '/admin/posts/create',
+                    icon: <FormOutlined/>,
+                    label: <Link href="/admin/posts/create">{t('addPost')}</Link>,
+                },
+            ],
+        },
+        {
             key: 'user',
             icon: <TeamOutlined/>,
             label: t('userCenter'),
@@ -93,23 +126,23 @@ export default function AdminLayoutClient({
                 },
             ],
         },
-        {
-            key: 'analytics',
-            icon: <LineChartOutlined/>,
-            label: t('dataAnalysis'),
-            children: [
-                {
-                    key: '/admin/analytics',
-                    icon: <BarChartOutlined/>,
-                    label: <Link href="/admin/analytics">{t('statistics')}</Link>,
-                },
-                {
-                    key: '/admin/reports',
-                    icon: <PieChartOutlined/>,
-                    label: <Link href="/admin/reports">{t('reports')}</Link>,
-                },
-            ],
-        },
+        // {
+        //     key: 'analytics',
+        //     icon: <LineChartOutlined/>,
+        //     label: t('dataAnalysis'),
+        //     children: [
+        //         {
+        //             key: '/admin/analytics',
+        //             icon: <BarChartOutlined/>,
+        //             label: <Link href="/admin/analytics">{t('statistics')}</Link>,
+        //         },
+        //         {
+        //             key: '/admin/reports',
+        //             icon: <PieChartOutlined/>,
+        //             label: <Link href="/admin/reports">{t('reports')}</Link>,
+        //         },
+        //     ],
+        // },
         {
             key: 'system',
             icon: <SettingOutlined/>,
@@ -189,7 +222,7 @@ export default function AdminLayoutClient({
                 <Menu
                     mode="inline"
                     selectedKeys={[pathname]}
-                    defaultOpenKeys={['content', 'user', 'analytics', 'system']}
+                    defaultOpenKeys={['user', 'analytics', 'system', 'pages', 'posts']}
                     style={{borderRight: 0}}
                     items={menuItems}
                 />

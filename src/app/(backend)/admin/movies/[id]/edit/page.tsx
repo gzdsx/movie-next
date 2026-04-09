@@ -5,7 +5,7 @@ import {Form, Input, InputNumber, Select, Button, Spin, Image, Row, Col, Card, A
 import {UploadOutlined, DeleteOutlined} from '@ant-design/icons';
 import {useRouter, useParams} from 'next/navigation';
 import {apiGet, apiPut, apiPost} from '@/lib/backendApi';
-import {useBackendApp} from "@/app/(backend)/admin/_components/BackendAppProvider";
+import {useBackendApp} from "@/contexts/BackendAppProvider";
 
 const {TextArea} = Input;
 

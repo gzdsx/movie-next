@@ -1,7 +1,7 @@
 'use client';
 
 import {useState, useEffect} from 'react';
-import {Form, Input, InputNumber, Select, Button, Card, message, Spin} from 'antd';
+import {App,Form, Input, InputNumber, Select, Button, Card, Spin} from 'antd';
 import {SaveOutlined} from '@ant-design/icons';
 import {apiGet, apiPost} from "@/lib/backendApi";
 
@@ -19,6 +19,7 @@ interface MailConfig {
 
 export default function MailSettingsPage() {
     const [form] = Form.useForm<MailConfig>();
+    const {message} = App.useApp();
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
 

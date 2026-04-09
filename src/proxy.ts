@@ -3,7 +3,7 @@ import {auth} from "@/auth"
 import {NextResponse} from "next/server"
 
 export default auth((req) => {
-    console.log('req:', req.auth);
+    //console.log('req:', req.auth);
     const isLoggedIn = !!req.auth;
     const {nextUrl} = req;
     const capabilities = req.auth?.user?.capabilities || [];

@@ -67,7 +67,7 @@ export default function MediaLibrary({
                                          open = false,
                                          onClose,
                                          onSelect,
-                                         multiple = true,
+                                         multiple = false,
                                      }: MediaLibraryProps) {
     const {message} = App.useApp();
     const {t} = useTranslations('mediaLibrary');
@@ -346,7 +346,7 @@ export default function MediaLibrary({
                 {/* 上传进度条 */}
                 {uploading && uploadProgress >= 0 && (
                     <div style={{marginBottom: 16, padding: '12px 16px', backgroundColor: '#f5f5f5', borderRadius: 8}}>
-                        <Space direction="vertical" style={{width: '100%'}} size={4}>
+                        <Space orientation="vertical" style={{width: '100%'}} size={4}>
                             <Space>
                                 <CloudUploadOutlined style={{color: '#1890ff'}}/>
                                 <Text type="secondary" style={{fontSize: 13}}>
@@ -370,7 +370,7 @@ export default function MediaLibrary({
                 <Row gutter={16}>
                     {/* 媒体网格 - 左侧 */}
                     <Col span={18}>
-                        <Spin spinning={loading} tip={t('loading') || '加载中...'}>
+                        <Spin spinning={loading} description={t('loading') || '加载中...'}>
                             <div className="media-grid" style={{
                                 minHeight: 450,
                                 maxHeight: 500,

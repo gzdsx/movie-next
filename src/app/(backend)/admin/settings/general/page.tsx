@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
     Card,
     Form,
@@ -20,22 +20,34 @@ import {
     ReloadOutlined,
     SaveOutlined,
 } from '@ant-design/icons';
-import {getSettings, updateSettings} from "../_lib/settings";
+import {apiGet, apiPost} from "@/lib/backendApi";
 
 export default function SettingsPage() {
     const [form] = Form.useForm();
     const {message} = App.useApp();
-    const [defaultValues, setDefaultValues] = useState({});
 
-    const handleSave = async () => {
-        const values = form.getFieldsValue();
-        await updateSettings(values);
+    const handleSubmit = async (values: {
+        sitename: string;
+        keywords: string;
+        description: string;
+        admin_email: string;
+        allow_registration: boolean;
+        require_email_verification: boolean;
+        allow_comments: boolean;
+        require_comment_approval: boolean;
+        max_upload_size: number;
+        allowed_video_formats: string;
+        notification_email: string;
+        notification_interval: number;
+    }) => {
+        await apiPost(`/settings`, values);
         message.success('设置已保存');
     };
 
     useEffect(() => {
         (async function () {
-            const {sitename, keywords, description, admin_email} = await getSettings();
+            const response = await apiGet(`/settings`);
+            const {sitename, keywords, description, admin_email} = response.data;
             form.setFieldsValue({
                 sitename,
                 keywords,
@@ -49,12 +61,9 @@ export default function SettingsPage() {
         <div>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24}}>
                 <h2 style={{fontSize: 24, fontWeight: 'bold', margin: 0}}>系统设置</h2>
-                <Button type="primary" icon={<SaveOutlined/>} onClick={handleSave}>
-                    保存设置
-                </Button>
             </div>
 
-            <Form form={form} layout="vertical">
+            <Form form={form} layout="vertical" onFinish={handleSubmit}>
                 {/* Site Settings */}
                 <Card
                     title={
@@ -231,6 +240,11 @@ export default function SettingsPage() {
                             <Switch/>
                             <span style={{color: '#8c8c8c', fontSize: 12}}>开启后网站将暂停对外服务</span>
                         </div>
+                    </Form.Item>
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" icon={<SaveOutlined/>}>
+                            保存配置
+                        </Button>
                     </Form.Item>
                 </Card>
             </Form>
