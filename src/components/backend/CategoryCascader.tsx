@@ -50,7 +50,6 @@ export const CategoryCascader = ({
                                      onChange,
                                      placeholder = '请选择分类',
                                      taxonomy = 'category',
-                                     multiple = false
                                  }: CategoryCascaderProps) => {
     const [categooryOptions, setCategooryOptions] = useState<Option[]>([]);
 
@@ -72,8 +71,7 @@ export const CategoryCascader = ({
             onChange={onChange}
             placeholder={placeholder}
             expandTrigger="hover"
-            multiple={multiple}
-            changeOnSelect
+            changeOnSelect={true}
         />
     );
 };
