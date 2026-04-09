@@ -38,8 +38,6 @@ const getSlides = async () => {
     }
 };
 
-export const dynamic = 'force-dynamic';
-
 export default async function Home() {
     const latestMovies = await getLatestMovies();
     const popularMovies = await getPopularMovies();

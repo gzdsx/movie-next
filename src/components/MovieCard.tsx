@@ -13,7 +13,7 @@ export const MovieCard = ({movie = {}, linkTarget = "_blank"}: { movie: Movie, l
     return (
         <div>
             <div className="pt-[145%] relative overflow-hidden">
-                <Link href={`/video/${movie.vid}`} target={linkTarget}>
+                <Link href={`/video/${movie.vid}`} target={linkTarget} prefetch={false}>
                     <img
                         src={movie.thumbnail}
                         alt={movie.title}
@@ -25,7 +25,7 @@ export const MovieCard = ({movie = {}, linkTarget = "_blank"}: { movie: Movie, l
             </div>
             <div className="p-2">
                 <h3 className="text-sm font-semibold truncate text-center">
-                    <Link href={`/video/${movie.vid}`} target={linkTarget} title={movie.title}>{movie.title}</Link>
+                    <Link href={`/video/${movie.vid}`} target={linkTarget} title={movie.title} prefetch={false}>{movie.title}</Link>
                 </h3>
             </div>
         </div>

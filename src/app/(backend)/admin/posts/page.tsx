@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
     Table,
     Card,
@@ -10,7 +10,7 @@ import {
     Input,
     Select,
     Pagination,
-    App, Spin,
+    App,
 } from 'antd';
 import {
     PlusOutlined,
@@ -209,7 +209,7 @@ export default function PostsManagement() {
     }, [offset, filterStatus, filterCategory]);
 
     return (
-        <Spin spinning={loading}>
+        <div>
             <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>{t('postManagement')}</h2>
             <Card>
                 <div style={{marginBottom: 16, display: 'flex', gap: 16, flexWrap: 'wrap'}}>
@@ -278,6 +278,6 @@ export default function PostsManagement() {
                     />
                 </div>
             </Card>
-        </Spin>
+        </div>
     );
 }
