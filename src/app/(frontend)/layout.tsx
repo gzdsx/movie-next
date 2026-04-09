@@ -35,29 +35,27 @@ export default function RootLayout({
                     crossOrigin="anonymous"></script>
         </head>
         <body className={`bg-black text-white min-h-screen w-full overflow-x-hidden relative overscroll-x-none`}>
-        <AntdRegistry>
-            <LocaleProvider>
-                <ConfigProvider theme={{
-                    algorithm: theme.darkAlgorithm,
-                    components: {
-                        Pagination: {
-                            // 针对分页组件的细粒度调整
-                            itemBg: '#111828',           // 按钮背景设为纯黑
-                            itemActiveBg: '#1677ff',     // 激活项背景
-                            itemLinkBg: '#000000',       // 上一页/下一页背景
-                            colorText: '#ffffff',        // 文字设为纯白
-                            colorTextDisabled: '#4d4d4d',
-                            itemActiveColor:'#ffffff'// 禁用状态文字颜色
-                        },
-                    }
-                }}>
-                    <Navbar/>
-                    <NavMobile/>
-                    {children}
-                    <Footer/>
-                </ConfigProvider>
-            </LocaleProvider>
-        </AntdRegistry>
+        <LocaleProvider>
+            <ConfigProvider theme={{
+                algorithm: theme.darkAlgorithm,
+                components: {
+                    Pagination: {
+                        // 针对分页组件的细粒度调整
+                        itemBg: '#111828',           // 按钮背景设为纯黑
+                        itemActiveBg: '#1677ff',     // 激活项背景
+                        itemLinkBg: '#000000',       // 上一页/下一页背景
+                        colorText: '#ffffff',        // 文字设为纯白
+                        colorTextDisabled: '#4d4d4d',
+                        itemActiveColor:'#ffffff'// 禁用状态文字颜色
+                    },
+                }
+            }}>
+                <Navbar/>
+                <NavMobile/>
+                {children}
+                <Footer/>
+            </ConfigProvider>
+        </LocaleProvider>
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-VBSMKS0Q1P"></script>
         <script>
             {`
