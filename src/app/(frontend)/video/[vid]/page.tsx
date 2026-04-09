@@ -10,7 +10,7 @@ const getVideo = async (vid: string) => {
     try {
         const res = await apiGet(`/movies/${vid}`);
         return res.data;
-    }catch (e) {
+    } catch (e) {
         console.error(e);
         return {};
     }
@@ -20,7 +20,7 @@ const getRelatedVideos = async (id: number) => {
     try {
         const res = await apiGet(`/movies/${id}/related`, {limit: 10});
         return res.data.items;
-    }catch (e) {
+    } catch (e) {
         console.error(e);
         return [];
     }
@@ -34,8 +34,8 @@ export async function generateMetadata({params}: any): Promise<Metadata> {
 
     return {
         title: `${movie.title + '-' + movie.source_name} - 小马影视`,
-        keywords: `导演:${movie.director},主演:${movie.main_actor}`,
-        description: `${movie.title}全集高清观看，剧情介绍：${movie.description.slice(0, 100)}...`,
+        keywords: `名称:${movie.title},别名:${movie.alias},导演:${movie.directors},主演:${movie.actors}`,
+        description: `剧情介绍：${movie.description.slice(0, 100)}...`,
         openGraph: {
             images: [movie.thumbnail], // 社交媒体分享时的预览图
         },
@@ -55,7 +55,8 @@ export default async function VideoPage({params}: { params: { vid: string } }) {
                     {/* 视频播放器 */}
                     <div className="relative bg-gray-900 rounded-lg overflow-hidden mb-8">
                         <div className="aspect-video bg-black flex items-center justify-center">
-                            <VideoPlayer src={video.source_src} currentSourceId={video.source_id} sources={video.sources}/>
+                            <VideoPlayer src={video.source_src} currentSourceId={video.source_id}
+                                         sources={video.sources}/>
                         </div>
                     </div>
                     {/* 视频信息 */}
@@ -67,14 +68,14 @@ export default async function VideoPage({params}: { params: { vid: string } }) {
                           9.7
                         </span>
                             <span>{video.year}</span>
-                            <span>{video.region}</span>
+                            <span>{video.regions}</span>
                             <span>{video.tags}</span>
                         </div>
                         <div className="flex items-center gap-4 mb-4">
-                            <span>导演:{video.director}</span>
+                            <span>导演:{video.directors}</span>
                         </div>
                         <div className="flex items-center gap-4 mb-4">
-                            <span>演员:{video.main_actor}</span>
+                            <span>演员:{video.actors}</span>
                         </div>
                         <p className="text-gray-300 leading-relaxed">
                             {video?.description}
