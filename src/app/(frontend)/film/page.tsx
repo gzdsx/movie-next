@@ -34,8 +34,6 @@ const getMovies = async (page: number, params?: any) => {
     }
 };
 
-export const dynamic = 'force-dynamic';
-
 export default async function Page({searchParams}: any) {
     const slides = await getSlides();
     const {page = 1, tag = '', year = '', region = ''} = await searchParams;

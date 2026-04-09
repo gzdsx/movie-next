@@ -21,6 +21,8 @@ export const viewport = {
     viewportFit: 'cover'
 }
 
+export const revalidate = 60;
+
 export default function RootLayout({
                                        children,
                                    }: Readonly<{
