@@ -38,10 +38,20 @@ const getSlides = async () => {
     }
 };
 
+const getIps = async () => {
+    try {
+        const res = await apiGet('/debug-ip');
+        console.log(res);
+    } catch (e) {
+        console.log(e);
+    }
+};
+
 export default async function Home() {
     const latestMovies = await getLatestMovies();
     const popularMovies = await getPopularMovies();
     const slides = await getSlides();
+    await getIps();
     return (
         <>
             <Carousel slides={slides}/>
