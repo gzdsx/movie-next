@@ -4,7 +4,6 @@ import NavMobile from "@/components/NavMobile";
 import Footer from "@/components/Footer";
 import {Metadata} from "next";
 import {LocaleProvider} from "@/contexts/LocaleContext";
-import {AntdRegistry} from "@ant-design/nextjs-registry";
 import "./globals.css";
 
 export const metadata: Metadata = {
