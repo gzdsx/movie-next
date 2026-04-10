@@ -17,25 +17,28 @@ async function getAuthSession() {
     return await getSession();
 }
 
-export async function apiFetch(endpoint: string, {data, params, ...customConfig}: FetchOptions = {}) {
-    const isServer = typeof window === 'undefined';
+export async function apiFetch(endpoint: string, {data, params, ...options}: FetchOptions = {}) {
     // 1. 处理 URL 参数
     const queryString = params ? `?${new URLSearchParams(params).toString()}` : '';
     const url = `${BASE_URL}${endpoint}${queryString}`;
 
     // 2. 默认 Headers 配置
-    const headers: HeadersInit = {
-        'Content-Type': 'application/json',
+    const headers = new Headers({
+        ...options.headers,
         'Accept': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest', // 必须！让 Laravel 识别为 AJAX 请求
-    };
+        'Content-Type': 'application/json'
+    });
 
     // 3. 自动注入 Token (如果是 Token 认证方案)
     // 如果是 Sanctum Cookie 方案，fetch 会自动携带凭证，无需手动加 Authorization
     const session = await getAuthSession();
     const token = (session as any)?.accessToken;
-    if (token) headers.Authorization = `Bearer ${token}`;
 
+    if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    const isServer = typeof window === 'undefined';
     if (isServer) {
         try {
             const headerStore = await getHeaders();
@@ -47,8 +50,8 @@ export async function apiFetch(endpoint: string, {data, params, ...customConfig}
 
             if (realIp) {
                 // 显式设置，让 Laravel 的 TrustProxies 能够识别
-                headers['X-Real-IP'] = realIp;
-                headers['X-Forwarded-For'] = realIp;
+                headers.set('X-Real-IP', realIp);
+                headers.set('X-Forwarded-For', realIp);
             }
         } catch (e) {
             // 在某些非请求上下文（如静态生成）中调用 headers() 会报错
@@ -56,21 +59,21 @@ export async function apiFetch(endpoint: string, {data, params, ...customConfig}
         }
     }
 
-    const config: RequestInit = {
-        method: data ? 'POST' : 'GET',
-        ...customConfig,
-        headers: {
-            ...headers,
-            ...customConfig.headers,
-        },
-        // 处理 Sanctum/Passport 的跨域凭证
-        credentials: 'include',
-    };
-
-    if (data) config.body = JSON.stringify(data);
+    if (data) {
+        if (data instanceof FormData) {
+            options.body = data;
+            headers.delete('Content-Type');
+        } else {
+            options.body = JSON.stringify(data);
+        }
+    }
 
     try {
-        const response = await fetch(url, config);
+        const response = await fetch(url, {
+            ...options,
+            headers: headers,
+            credentials: 'include',
+        });
 
         // 4. 统一错误拦截
         if (response.status === 401) {
@@ -97,18 +100,18 @@ export async function apiFetch(endpoint: string, {data, params, ...customConfig}
     }
 }
 
-export function apiGet(endpoint: string, params?: Record<string, any>, customConfig?: FetchOptions) {
-    return apiFetch(endpoint, {...customConfig, params, method: 'GET'});
+export function apiGet(endpoint: string, params?: Record<string, any>, options?: FetchOptions) {
+    return apiFetch(endpoint, {...options, params, method: 'GET'});
 }
 
-export function apiPost(endpoint: string, data?: any, customConfig?: FetchOptions) {
-    return apiFetch(endpoint, {...customConfig, data, method: 'POST'});
+export function apiPost(endpoint: string, data?: any, options?: FetchOptions) {
+    return apiFetch(endpoint, {...options, data, method: 'POST'});
 }
 
-export function apiPut(endpoint: string, data?: any, customConfig?: FetchOptions) {
-    return apiFetch(endpoint, {...customConfig, data, method: 'PUT'});
+export function apiPut(endpoint: string, data?: any, options?: FetchOptions) {
+    return apiFetch(endpoint, {...options, data, method: 'PUT'});
 }
 
-export function apiDelete(endpoint: string, data?: any, customConfig?: FetchOptions) {
-    return apiFetch(endpoint, {...customConfig, data, method: 'DELETE'});
+export function apiDelete(endpoint: string, data?: any, options?: FetchOptions) {
+    return apiFetch(endpoint, {...options, data, method: 'DELETE'});
 }

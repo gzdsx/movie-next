@@ -1,7 +1,8 @@
 // lib/api.ts
 // lib/api-client.ts
 import {auth} from "@/auth"; // 服务端获取 session
-import {getSession} from "next-auth/react"; // 客户端获取 session
+import {getSession} from "next-auth/react";
+import {headers as getHeaders} from "next/headers"; // 客户端获取 session
 
 const BASE_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
@@ -18,39 +19,63 @@ async function getAuthSession() {
     return await getSession();
 }
 
-export async function apiFetch(endpoint: string, {params, ...customConfig}: FetchOptions = {}) {
+export async function apiFetch(endpoint: string, {data, params, ...options}: FetchOptions = {}) {
     // 1. 处理 URL 参数
     const queryString = params ? `?${new URLSearchParams(params).toString()}` : '';
     const url = `${BASE_API_URL}${endpoint}${queryString}`;
 
     // 2. 默认 Headers 配置
-    const defaultHeaders: Record<string, string> = {
+    const headers = new Headers({
+        ...options.headers,
         'Accept': 'application/json',
-    };
-
-    // 关键：非 FormData 自动设为 JSON 类型
-    if (!(customConfig.body instanceof FormData)) {
-        defaultHeaders['Content-Type'] = 'application/json';
-    }
+        'Content-Type': 'application/json'
+    });
 
     // 3. 自动注入 Token (如果是 Token 认证方案)
     // 如果是 Sanctum Cookie 方案，fetch 会自动携带凭证，无需手动加 Authorization
     const session = await getAuthSession();
     const token = (session as any)?.accessToken;
-    if (token) defaultHeaders.Authorization = `Bearer ${token}`;
 
-    const config: RequestInit = {
-        ...customConfig,
-        headers: {
-            ...defaultHeaders,
-            ...customConfig.headers,
-        },
-        // 处理 Sanctum/Passport 的跨域凭证
-        credentials: 'include',
-    };
+    if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    const isServer = typeof window === 'undefined';
+    if (isServer) {
+        try {
+            const headerStore = await getHeaders();
+
+            // 按照优先级获取真实 IP：Cloudflare -> 现有转发链路 -> 节点 IP
+            const realIp = headerStore.get('cf-connecting-ip') ||
+                headerStore.get('x-forwarded-for')?.split(',')[0] ||
+                '';
+
+            if (realIp) {
+                // 显式设置，让 Laravel 的 TrustProxies 能够识别
+                headers.set('X-Real-IP', realIp);
+                headers.set('X-Forwarded-For', realIp);
+            }
+        } catch (e) {
+            // 在某些非请求上下文（如静态生成）中调用 headers() 会报错
+            console.warn('Unable to access headers in current context.');
+        }
+    }
+
+    if (data) {
+        if (data instanceof FormData) {
+            options.body = data;
+            headers.delete('Content-Type');
+        } else {
+            options.body = JSON.stringify(data);
+        }
+    }
 
     try {
-        const response = await fetch(url, config);
+        const response = await fetch(url, {
+            ...options,
+            headers: headers,
+            credentials: 'include',
+        });
 
         // 4. 统一错误拦截
         if (response.status === 401) {
@@ -77,32 +102,18 @@ export async function apiFetch(endpoint: string, {params, ...customConfig}: Fetc
     }
 }
 
-export function apiGet(endpoint: string, params?: Record<string, any>, customConfig?: FetchOptions) {
-    return apiFetch(endpoint, {...customConfig, params, method: 'GET'});
+export function apiGet(endpoint: string, params?: Record<string, any>, options?: FetchOptions) {
+    return apiFetch(endpoint, {...options, params, method: 'GET'});
 }
 
-export function apiPost(endpoint: string, data?: any, customConfig?: FetchOptions) {
-    const requestConfig = {...customConfig};
-    if (data instanceof FormData) {
-        requestConfig.body = data;
-    } else {
-        requestConfig.body = JSON.stringify(data);
-    }
-    return apiFetch(endpoint, {...requestConfig, method: 'POST'});
+export function apiPost(endpoint: string, data?: any, options?: FetchOptions) {
+    return apiFetch(endpoint, {...options, data, method: 'POST'});
 }
 
-export function apiPut(endpoint: string, data?: any, customConfig?: FetchOptions) {
-    return apiFetch(endpoint, {
-        ...customConfig,
-        method: 'PUT',
-        body: JSON.stringify(data)
-    });
+export function apiPut(endpoint: string, data?: any, options?: FetchOptions) {
+    return apiFetch(endpoint, {...options, data, method: 'PUT'});
 }
 
-export function apiDelete(endpoint: string, data?: any, customConfig?: FetchOptions) {
-    const requestConfig = {...customConfig};
-    if (data) {
-        requestConfig.body = JSON.stringify(data);
-    }
-    return apiFetch(endpoint, {...requestConfig, method: 'DELETE'});
+export function apiDelete(endpoint: string, data?: any, options?: FetchOptions) {
+    return apiFetch(endpoint, {...options, data, method: 'DELETE'});
 }
