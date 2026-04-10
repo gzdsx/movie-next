@@ -1,7 +1,6 @@
-// lib/api.ts
-// lib/api-client.ts
 import {auth} from "@/auth"; // 服务端获取 session
 import {getSession} from "next-auth/react"; // 客户端获取 session
+import {headers as getHeaders} from 'next/headers';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -19,6 +18,7 @@ async function getAuthSession() {
 }
 
 export async function apiFetch(endpoint: string, {data, params, ...customConfig}: FetchOptions = {}) {
+    const isServer = typeof window === 'undefined';
     // 1. 处理 URL 参数
     const queryString = params ? `?${new URLSearchParams(params).toString()}` : '';
     const url = `${BASE_URL}${endpoint}${queryString}`;
@@ -35,6 +35,26 @@ export async function apiFetch(endpoint: string, {data, params, ...customConfig}
     const session = await getAuthSession();
     const token = (session as any)?.accessToken;
     if (token) headers.Authorization = `Bearer ${token}`;
+
+    if (isServer) {
+        try {
+            const headerStore = await getHeaders();
+
+            // 按照优先级获取真实 IP：Cloudflare -> 现有转发链路 -> 节点 IP
+            const realIp = headerStore.get('cf-connecting-ip') ||
+                headerStore.get('x-forwarded-for')?.split(',')[0] ||
+                '';
+
+            if (realIp) {
+                // 显式设置，让 Laravel 的 TrustProxies 能够识别
+                headers['X-Real-IP'] = realIp;
+                headers['X-Forwarded-For'] = realIp;
+            }
+        } catch (e) {
+            // 在某些非请求上下文（如静态生成）中调用 headers() 会报错
+            console.warn('Unable to access headers in current context.');
+        }
+    }
 
     const config: RequestInit = {
         method: data ? 'POST' : 'GET',
