@@ -1,8 +1,5 @@
-// lib/api.ts
-// lib/api-client.ts
 import {auth} from "@/auth"; // 服务端获取 session
 import {getSession} from "next-auth/react";
-import {headers as getHeaders} from "next/headers"; // 客户端获取 session
 
 const BASE_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
@@ -43,6 +40,7 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
     const isServer = typeof window === 'undefined';
     if (isServer) {
         try {
+            const {headers: getHeaders} = await import('next/headers');
             const headerStore = await getHeaders();
 
             // 按照优先级获取真实 IP：Cloudflare -> 现有转发链路 -> 节点 IP
