@@ -51,7 +51,7 @@ export default async function Home() {
     const latestMovies = await getLatestMovies();
     const popularMovies = await getPopularMovies();
     const slides = await getSlides();
-    await getIps();
+    //await getIps();
     return (
         <>
             <Carousel slides={slides}/>
