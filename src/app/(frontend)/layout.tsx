@@ -28,20 +28,12 @@ export default function RootLayout({
                                    }: Readonly<{
     children: React.ReactNode;
 }>) {
+
     return (
         <html lang="zh" className="dark w-full overflow-x-hidden relative">
         <head>
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7306822352785197"
                     crossOrigin="anonymous"></script>
-            {`
-                <script type="text/javascript">
-                    (function(c,l,a,r,i,t,y){
-                        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-                    })(window, document, "clarity", "script", "wma3jso1hz");
-                </script>
-            `}
         </head>
         <body className={`bg-black text-white min-h-screen w-full overflow-x-hidden relative overscroll-x-none`}>
         <LocaleProvider>
@@ -74,6 +66,15 @@ export default function RootLayout({
 
             gtag('config', 'G-VBSMKS0Q1P');
             `}
+        </script>
+        <script id="clarity-script" strategy="afterInteractive">
+            {`
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "wma3jso1hz");
+          `}
         </script>
         </body>
         </html>
