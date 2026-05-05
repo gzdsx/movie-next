@@ -53,6 +53,7 @@ export default async function VideoPage({params}: { params: { vid: string } }) {
         name: video.title,
         description: video.description,
         thumbnailUrl: video.thumbnail,
+        contentUrl: video.source_src,
         uploadDate: new Date(video.created_at).toISOString(),
     }
 
