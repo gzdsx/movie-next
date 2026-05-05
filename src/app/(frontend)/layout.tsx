@@ -67,7 +67,7 @@ export default function RootLayout({
             gtag('config', 'G-VBSMKS0Q1P');
             `}
         </script>
-        <script id="clarity-script" strategy="afterInteractive">
+        <script id="clarity-script" type="text/javascript">
             {`
             (function(c,l,a,r,i,t,y){
                 c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
