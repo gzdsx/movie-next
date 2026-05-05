@@ -7,9 +7,10 @@ interface VideoPlayerProps {
     src: string;
     currentSourceId: string | number;
     sources: any[];
+    poster: string;
 }
 
-const VideoPlayer = ({src, currentSourceId = 0, sources = []}: VideoPlayerProps) => {
+const VideoPlayer = ({src, currentSourceId = 0, sources = [], poster}: VideoPlayerProps) => {
     const router = useRouter();
     return (
         <ReactPlayer
@@ -25,6 +26,7 @@ const VideoPlayer = ({src, currentSourceId = 0, sources = []}: VideoPlayerProps)
                     router.push(`/video/${sources[index + 1].vid}`);
                 }
             }}
+            poster={poster}
         />
     );
 };
