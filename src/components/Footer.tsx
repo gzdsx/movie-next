@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import {Github, Twitter, Mail} from 'lucide-react';
+import {Mail} from 'lucide-react';
 
 export default function Footer() {
     return (
@@ -14,10 +14,10 @@ export default function Footer() {
                         </p>
                         <div className="flex space-x-4">
                             <a href="#" className="hover:text-white transition-colors">
-                                <Github size={20}/>
+
                             </a>
                             <a href="#" className="hover:text-white transition-colors">
-                                <Twitter size={20}/>
+
                             </a>
                             <a href="#" className="hover:text-white transition-colors">
                                 <Mail size={20}/>

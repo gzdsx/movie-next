@@ -83,7 +83,7 @@ export default async function VideoPage({params}: { params: { vid: string } }) {
                             <div className="flex items-center gap-4 text-gray-400 mb-4">
                         <span className="flex items-center gap-1">
                           <Star className="w-4 h-4 text-yellow-500 fill-yellow-500"/>
-                          9.7
+                            {video.score || '6.0'}
                         </span>
                                 <span>{video.year}</span>
                                 <span>{video.regions}</span>

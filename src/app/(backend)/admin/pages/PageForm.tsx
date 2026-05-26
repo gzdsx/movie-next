@@ -6,7 +6,7 @@ import {Form, Input, Select, Button, Row, Col, Image} from 'antd';
 import {UploadOutlined, DeleteOutlined} from '@ant-design/icons';
 import {useBackendApp} from "@/contexts/BackendAppContext";
 import {useTranslations} from '@/contexts/BackendLocaleContext';
-import RichTextEditor from '@/components/RichTextEditor';
+import RichTextEditor from '@/components/common/RichTextEditor';
 
 const {TextArea} = Input;
 

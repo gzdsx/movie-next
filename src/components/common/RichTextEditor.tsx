@@ -25,18 +25,17 @@ import {
     AlignRightOutlined,
     MenuOutlined,
 } from '@ant-design/icons';
-import {useBackendApp} from "@/contexts/BackendAppContext";
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useMediaLibrary} from "@/contexts/BackendAppContext";
 
 interface RichTextEditorProps {
     value?: string;
     onChange?: (html: string) => void;
     placeholder?: string;
+    height?: number | string;
 }
 
-export default function RichTextEditor({value = '', onChange, placeholder}: RichTextEditorProps) {
-    const {t} = useTranslations('pages');
-    const {mediaLibrary} = useBackendApp();
+export default function RichTextEditor({value = '', onChange, placeholder, height}: RichTextEditorProps) {
+    const mediaLibrary = useMediaLibrary();
     const [isFullscreen, setIsFullscreen] = useState(false);
 
     const editor = useEditor({
@@ -44,9 +43,10 @@ export default function RichTextEditor({value = '', onChange, placeholder}: Rich
         extensions: [
             StarterKit.configure({
                 heading: {levels: [1, 2, 3]},
+                link: false,
             }),
             Placeholder.configure({
-                placeholder: placeholder || t('contentPlaceholder'),
+                placeholder: placeholder || '',
             }),
             Image.configure({
                 inline: false,
@@ -216,9 +216,9 @@ export default function RichTextEditor({value = '', onChange, placeholder}: Rich
                     verticalAlign: 'middle'
                 }}/>
 
-                {toolbarButton(<LinkOutlined/>, t('insertLink'), handleInsertLink,
+                {toolbarButton(<LinkOutlined/>, 'Insert Link', handleInsertLink,
                     editor.isActive('link'))}
-                {toolbarButton(<PictureOutlined/>, t('insertImage'), handleInsertImage)}
+                {toolbarButton(<PictureOutlined/>, 'Insert Image', handleInsertImage)}
                 {toolbarButton(<LineOutlined/>, 'Horizontal Rule',
                     () => editor.chain().focus().setHorizontalRule().run())}
 
@@ -242,7 +242,7 @@ export default function RichTextEditor({value = '', onChange, placeholder}: Rich
             {/* Editor Content */}
             <EditorContent
                 editor={editor}
-                style={{minHeight: isFullscreen ? 'calc(100vh - 60px)' : 450}}
+                style={{minHeight: isFullscreen ? 'calc(100vh - 60px)' : height}}
             />
         </div>
     );

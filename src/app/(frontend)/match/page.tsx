@@ -1,14 +1,14 @@
 import {apiGet} from "@/lib/api";
-import Carousel, {Slide} from "@/components/Carousel";
 import MovieList from "@/components/MovieList";
 import MoviePagination from "@/components/MoviePagination";
 import MatchFilter from "@/components/MatchFilter";
+import HeroCarousel, {Slide} from "@/components/frontend/HeroCarousel";
 
 const getSlides = async () => {
     try {
         const res = await apiGet('/swipers/26/slides');
         return [...res.data.items];
-    }catch (e) {
+    } catch (e) {
         console.log(e);
         return [];
     }
@@ -19,7 +19,7 @@ const getMovies = async (page: number, params?: any) => {
         const offset = (page - 1) * 30;
         const res = await apiGet('/movies', {...params, type: 'match', offset, limit: 30});
         return res.data;
-    }catch (e) {
+    } catch (e) {
         console.log(e);
         return {items: [], total: 0};
     }
@@ -31,7 +31,7 @@ export default async function Page({searchParams}: any) {
     const {items: movies, total} = await getMovies(page, {tag});
     return (
         <>
-            <Carousel slides={slides}/>
+            <HeroCarousel slides={slides}/>
             <div className="container mx-auto px-4 py-8">
                 <div className="flex flex-col gap-y-2 mb-4">
                     <MatchFilter current={tag}/>

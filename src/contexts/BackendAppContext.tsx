@@ -13,12 +13,13 @@ interface BackendAppContextType {
     mediaLibrary: {
         open: (options: MediaLibraryOptions) => void;
         close: () => void;
-    }
+    },
+    administrator: any;
 }
 
 const BackendAppContext = createContext<BackendAppContextType | undefined>(undefined);
 
-export function BackendAppProvider({children}: { children: React.ReactNode }) {
+export function BackendAppProvider({children, administrator}: { children: React.ReactNode, administrator: any }) {
     const [mediaLibraryOpen, setMediaLibraryOpen] = useState(false);
     const [mediaLibraryOptions, setMediaLibraryOptions] = useState<MediaLibraryOptions | null>(null);
 
@@ -35,7 +36,8 @@ export function BackendAppProvider({children}: { children: React.ReactNode }) {
         mediaLibrary: {
             open: openMediaLibrary,
             close: closeMediaLibrary,
-        }
+        },
+        administrator,
     };
 
     return (
@@ -67,7 +69,12 @@ export function useMediaLibrary() {
     return mediaLibrary;
 }
 
-export function useMessage(){
+export function useMessage() {
     const {message} = App.useApp();
     return message;
+}
+
+export function useAdministrator() {
+    const {administrator} = useBackendApp();
+    return administrator;
 }

@@ -1,30 +1,20 @@
-import Cookies from "js-cookie";
-
-const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
-
 interface FetchOptions extends RequestInit {
     data?: any;
     params?: Record<string, any>;
-}
-
-export interface ResponseError {
-    status: number | string;
-    message: string;
-    errors: any;
 }
 
 function serializeParams(params: Record<string, any>) {
     const parts = [];
     for (const key in params) {
         const value = params[key];
-        if (value == null) continue;
+        if (value == null || value === 'all') continue;
 
         if (Array.isArray(value)) {
             value.forEach(item => {
-                parts.push(`${key}[]=${encodeURIComponent(item)}`);
+                parts.push(`${key}[]=${item}`);
             });
         } else {
-            parts.push(`${key}=${encodeURIComponent(value)}`);
+            parts.push(`${key}=${value}`);
         }
     }
     return parts.join('&');
@@ -32,85 +22,37 @@ function serializeParams(params: Record<string, any>) {
 
 export async function apiFetch(endpoint: string, {data, params, ...options}: FetchOptions = {}) {
     // 1. 处理 URL 参数
-    let url = `${BASE_URL}${endpoint}`;
+    let url = `/api/backend${endpoint}`;
     if (params) {
         url += '?' + serializeParams(params);
     }
 
-    // 2. 默认 Headers 配置
-    const headers = new Headers({
-        ...options.headers,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    });
+    const headers = new Headers(options.headers);
+    headers.set('Content-Type', 'application/json');
 
-    // 3. 自动注入 Token (如果是 Token 认证方案)
-    const token = Cookies.get('adminToken');
-    if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-    }
-
-    const isServer = typeof window === 'undefined';
-    if (isServer) {
-        try {
-            const {headers: getHeaders} = await import('next/headers');
-            const headerStore = await getHeaders();
-
-            // 按照优先级获取真实 IP：Cloudflare -> 现有转发链路 -> 节点 IP
-            const realIp = headerStore.get('x-forwarded-for')?.split(',')[0] || '';
-            if (realIp) {
-                // 显式设置，让 Laravel 的 TrustProxies 能够识别
-                headers.set('X-Real-IP', realIp);
-                headers.set('X-Forwarded-For', realIp);
-            }
-        } catch (e) {
-            // 在某些非请求上下文（如静态生成）中调用 headers() 会报错
-            console.warn('Unable to access headers in current context.');
-        }
-    }
-
-    if (data) {
+    // --- 修改这里：支持所有带有 Body 的动词 ---
+    const method = options.method?.toUpperCase() || 'GET';
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method) && data !== undefined) {
         if (data instanceof FormData) {
             options.body = data;
-            headers.delete('Content-Type');
+            headers.delete('Content-Type'); // FormData 必须让 fetch 自动生成带 boundary 的 Header
         } else {
             options.body = JSON.stringify(data);
         }
     }
 
     try {
-        const response = await fetch(url, {
-            ...options,
-            headers: headers,
-            credentials: 'include',
-        });
-
-        // 4. 统一错误拦截
-        if (response.status === 401) {
-            // 处理未授权，例如跳转登录
-            // if (typeof window !== 'undefined') window.location.href = '/login?callbackUrl=' + encodeURIComponent(window.location.pathname);
-            throw {
-                status: 401,
-                message: 'Unauthorized',
-            }
-        }
-
-        // 204 No Content 处理
-        if (response.status === 204) {
-            throw {
-                status: 204,
-                message: 'No Content',
-            }
-        }
+        const response = await fetch(url, {...options, headers});
+        //console.log('response:', response.json());
 
         if (!response.ok) {
             const errorData = await response.json();
-            //console.log('errorData:', errorData);
+            //console.log('response:',errorData);
             throw {
                 status: errorData.status,
                 message: errorData.message || '请求失败',
                 errors: errorData.errors, // Laravel 的表单验证错误通常放在这里
-            }
+            };
         }
 
         return await response.json();

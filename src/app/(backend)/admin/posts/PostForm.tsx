@@ -1,7 +1,7 @@
 'use client';
 
 import {Button, Col, Form, Image, Input, Row, Select} from "antd";
-import RichTextEditor from "@/components/RichTextEditor";
+import RichTextEditor from "@/components/common/RichTextEditor";
 import {DeleteOutlined, UploadOutlined} from "@ant-design/icons";
 import {useTranslations} from "@/contexts/BackendLocaleContext";
 import {useState} from "react";

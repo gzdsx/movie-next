@@ -1,7 +1,7 @@
-import Carousel from '../../components/Carousel';
-import MovieList from '../../components/MovieList';
 import {apiGet} from "@/lib/api";
+import MovieList from "@/components/MovieList";
 import AdsenseBanner from "@/components/AdsenseBanner";
+import HeroCarousel from "@/components/frontend/HeroCarousel";
 
 const getLatestMovies = async () => {
     try {
@@ -38,14 +38,6 @@ const getSlides = async () => {
     }
 };
 
-const getIps = async () => {
-    try {
-        const res = await apiGet('/debug-ip');
-        console.log(res);
-    } catch (e) {
-        console.log(e);
-    }
-};
 
 export default async function Home() {
     const latestMovies = await getLatestMovies();
@@ -54,7 +46,7 @@ export default async function Home() {
     //await getIps();
     return (
         <>
-            <Carousel slides={slides}/>
+            <HeroCarousel slides={slides}/>
             <div className="container mx-auto px-4 py-8">
                 <MovieList title="最近更新" movies={latestMovies}/>
                 <MovieList title="热门影片" movies={popularMovies}/>

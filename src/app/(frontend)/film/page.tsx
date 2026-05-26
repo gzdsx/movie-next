@@ -1,11 +1,11 @@
 import {apiGet} from "@/lib/api";
-import Carousel from "@/components/Carousel";
 import MovieList from "@/components/MovieList";
 import MoviePagination from "@/components/MoviePagination";
 import PlotFilter from "@/components/PlotFilter";
 import YearFilter from "@/components/YearFilter";
 import RegionFilter from "@/components/RegionFilter";
 import type {Metadata} from "next";
+import HeroCarousel from "@/components/frontend/HeroCarousel";
 
 export const metadata: Metadata = {
     title: "电影-小马影视",
@@ -40,7 +40,7 @@ export default async function Page({searchParams}: any) {
     const {items: movies, total} = await getMovies(page, {tag, year, region});
     return (
         <>
-            <Carousel slides={slides}/>
+            <HeroCarousel slides={slides}/>
             <div className="container mx-auto px-4 py-8">
                 <div className="flex flex-col gap-y-2 mb-4">
                     <PlotFilter current={tag}/>

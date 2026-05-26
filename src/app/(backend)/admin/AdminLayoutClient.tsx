@@ -8,7 +8,6 @@ import {
     VideoCameraOutlined,
     UserOutlined,
     CommentOutlined,
-    LineChartOutlined,
     SettingOutlined,
     BellOutlined,
     LogoutOutlined,
@@ -18,17 +17,15 @@ import {
     TeamOutlined,
     SafetyOutlined,
     FileTextOutlined,
-    BarChartOutlined,
-    PieChartOutlined,
     ToolOutlined, MailOutlined, QuestionOutlined,
     ReadOutlined, FormOutlined, UnorderedListOutlined,
 } from '@ant-design/icons';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
-import {signOut, useSession} from "next-auth/react";
-import {apiPost} from "@/lib/api";
 import {useTranslations} from '@/contexts/BackendLocaleContext';
 import LanguageSwitcher from '@/components/backend/LanguageSwitcher';
+import {apiPost} from "@/lib/backendApi";
+import {useAdministrator} from "@/contexts/BackendAppContext";
 
 const {Header, Sider, Content} = Layout;
 
@@ -37,12 +34,12 @@ export default function AdminLayoutClient({
                                           }: {
     children: React.ReactNode;
 }) {
-    const { t } = useTranslations('admin');
-    const { t: tNav } = useTranslations('nav');
-
+    const {t} = useTranslations('admin');
+    const {t: tNav} = useTranslations('nav');
     const [collapsed, setCollapsed] = useState(false);
     const pathname = usePathname();
-    const {data:session} = useSession();
+    const administrator = useAdministrator();
+
     const {
         token: {colorBgContainer, borderRadiusLG},
     } = theme.useToken();
@@ -162,6 +159,11 @@ export default function AdminLayoutClient({
         },
     ];
 
+    const logout = async () => {
+        await apiPost('/auth/logout');
+        window.location.reload();
+    }
+
     const userMenuItems = [
         {
             key: 'profile',
@@ -174,10 +176,7 @@ export default function AdminLayoutClient({
         {
             key: 'signout',
             label: tNav('logout'),
-            onClick: async () => {
-                await apiPost('/auth/logout');
-                await signOut();
-            }
+            onClick: logout
         },
         {
             type: 'divider' as const,
@@ -250,14 +249,11 @@ export default function AdminLayoutClient({
                     />
 
                     <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
-                        <LanguageSwitcher />
-                        <Badge count={5} size="small">
-                            <Button type="text" icon={<BellOutlined/>}/>
-                        </Badge>
+                        <LanguageSwitcher/>
                         <Dropdown menu={{items: userMenuItems}} placement="bottomRight">
                             <div style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8}}>
-                                <Avatar icon={<UserOutlined/>} src={session?.user?.image}/>
-                                <span style={{color: '#262626'}}>{session?.user?.name}</span>
+                                <Avatar icon={<UserOutlined/>} src={administrator?.avatar}/>
+                                <span style={{color: '#262626'}}>{administrator?.name}</span>
                             </div>
                         </Dropdown>
                     </div>

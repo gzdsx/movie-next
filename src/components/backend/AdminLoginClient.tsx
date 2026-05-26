@@ -5,7 +5,6 @@ import {Form, Input, Button, Card} from 'antd';
 import {UserOutlined, LockOutlined} from '@ant-design/icons';
 import {apiPost} from "@/lib/backendApi";
 import {useMessage} from "@/contexts/BackendAppContext";
-import Cookies from "js-cookie";
 
 export default function AdminLoginClient() {
     const message = useMessage();
@@ -17,10 +16,7 @@ export default function AdminLoginClient() {
         apiPost(`/auth/login`, {
             account: values.account,
             password: values.password
-        }).then(response => {
-            const {access_token, user} = response.data;
-            Cookies.set('adminToken', access_token);
-            Cookies.set('adminUser', JSON.stringify(user));
+        }).then(() => {
             window.location.reload();
         }).catch(reason => {
             //console.log(reason);
@@ -32,7 +28,7 @@ export default function AdminLoginClient() {
 
     return (
         <div
-            className="min-h-screen bg-linear-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center relative overflow-hidden">
+            className="min-h-screen bg-linear-to-br flex items-center justify-center relative overflow-hidden">
             {/* 动态背景粒子效果 */}
             <div className="absolute inset-0 overflow-hidden">
                 <div
@@ -55,7 +51,7 @@ export default function AdminLoginClient() {
 
                 <Form
                     name="login"
-                    initialValues={{remember: true, account: '307718818@163.com', password: 'EUFXgrA32l)2'}}
+                    initialValues={{remember: true, account: '', password: ''}}
                     onFinish={onFinish}
                     autoComplete="off"
                     size="large"

@@ -1,11 +1,11 @@
 import {ConfigProvider, App} from "antd";
 import {Metadata} from "next";
 import {cookies} from "next/headers";
-import {SessionProvider} from "next-auth/react";
 import {AntdRegistry} from "@ant-design/nextjs-registry";
-import AdminRootLayout from "@/app/(backend)/admin/AdminRootLayout";
 import AdminLoginClient from "@/components/backend/AdminLoginClient";
 import {BackendLocaleProvider} from "@/contexts/BackendLocaleContext";
+import {BackendAppProvider} from "@/contexts/BackendAppContext";
+import AdminLayoutClient from "@/app/(backend)/admin/AdminLayoutClient";
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -22,12 +22,15 @@ export const viewport = {
 }
 
 export default async function RootLayout({
-                                       children,
-                                   }: Readonly<{
+                                             children,
+                                         }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const tokenStorage = await cookies();
-    const accessToken = tokenStorage.get('adminToken')?.value;
+    const cookieStorage = await cookies();
+    const accessToken = cookieStorage.get('adminToken')?.value;
+    const adminUser = cookieStorage.get('adminUser')?.value;
+    const administrator = adminUser ? JSON.parse(adminUser) : null;
+
     return (
         <html lang="zh" className="w-full overflow-x-hidden relative">
         <body className={`bg-black text-white min-h-screen w-full overflow-x-hidden relative overscroll-x-none`}>
@@ -44,17 +47,17 @@ export default async function RootLayout({
                 }
             }}>
                 <AntdRegistry>
-                    <SessionProvider>
-                        <App>
+                    <App>
+                        <BackendAppProvider administrator={administrator}>
                             {
                                 accessToken ? (
-                                    <AdminRootLayout>{children}</AdminRootLayout>
+                                    <AdminLayoutClient>{children}</AdminLayoutClient>
                                 ) : (
                                     <AdminLoginClient/>
                                 )
                             }
-                        </App>
-                    </SessionProvider>
+                        </BackendAppProvider>
+                    </App>
                 </AntdRegistry>
             </ConfigProvider>
         </BackendLocaleProvider>
