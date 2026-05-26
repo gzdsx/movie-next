@@ -3,11 +3,11 @@
 import {Button, Col, Form, Image, Input, Row, Select} from "antd";
 import RichTextEditor from "@/components/RichTextEditor";
 import {DeleteOutlined, UploadOutlined} from "@ant-design/icons";
-import {useTranslations} from "@/contexts/LocaleContext";
+import {useTranslations} from "@/contexts/BackendLocaleContext";
 import {useState} from "react";
 import {useRouter} from "next/navigation";
 import {CategoryCheckboxGroup} from "@/components/backend/CategoryCheckboxGroup";
-import {useBackendApp} from "@/contexts/BackendAppProvider";
+import {useBackendApp} from "@/contexts/BackendAppContext";
 
 const {TextArea} = Input;
 

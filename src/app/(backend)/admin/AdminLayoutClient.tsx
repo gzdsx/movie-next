@@ -27,8 +27,8 @@ import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 import {signOut, useSession} from "next-auth/react";
 import {apiPost} from "@/lib/api";
-import {useTranslations} from '@/contexts/LocaleContext';
-import LanguageSwitcher from '@/components/LanguageSwitcher';
+import {useTranslations} from '@/contexts/BackendLocaleContext';
+import LanguageSwitcher from '@/components/backend/LanguageSwitcher';
 
 const {Header, Sider, Content} = Layout;
 

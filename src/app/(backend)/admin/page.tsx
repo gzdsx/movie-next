@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import {Card, Col, Row, Statistic, Table, Progress, List, Avatar, Tag} from 'antd';
+import {Card, Col, Row, Statistic, Table, Progress, Avatar, Tag} from 'antd';
 import {
     VideoCameraOutlined,
     UserOutlined,
@@ -65,7 +65,12 @@ export default function AdminDashboard() {
                                     <Statistic
                                         value={stat.value}
                                         suffix={stat.suffix}
-                                        valueStyle={{fontSize: 28, fontWeight: 'bold'}}
+                                        styles={{
+                                            content: {
+                                                fontSize: 28,
+                                                fontWeight: 'bold'
+                                            }
+                                        }}
                                     />
                                 </div>
                                 {stat.icon}
@@ -115,29 +120,33 @@ export default function AdminDashboard() {
 
                 <Col xs={24} lg={10}>
                     <Card title="热门影片排行">
-                        <List
-                            itemLayout="horizontal"
-                            dataSource={topMoviesData}
-                            renderItem={(item, index) => (
-                                <List.Item>
-                                    <List.Item.Meta
-                                        avatar={
-                                            <Avatar
-                                                style={{backgroundColor: index < 3 ? '#ff4d4f' : '#8c8c8c'}}
-                                            >
-                                                {index + 1}
-                                            </Avatar>
-                                        }
-                                        title={item.title}
-                                        description={`播放量: ${item.views.toLocaleString()}`}
-                                    />
+                        <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
+                            {topMoviesData.map((item, index) => (
+                                <div key={item.id} style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    padding: '8px 0',
+                                    borderBottom: '1px solid #f0f0f0'
+                                }}>
+                                    <Avatar
+                                        style={{backgroundColor: index < 3 ? '#ff4d4f' : '#8c8c8c', marginRight: 12}}
+                                    >
+                                        {index + 1}
+                                    </Avatar>
+                                    <div style={{flex: 1}}>
+                                        <div style={{fontWeight: 500}}>{item.title}</div>
+                                        <div style={{
+                                            color: '#8c8c8c',
+                                            fontSize: 12
+                                        }}>{`播放量: ${item.views.toLocaleString()}`}</div>
+                                    </div>
                                     <div style={{display: 'flex', alignItems: 'center', gap: 4}}>
                                         <StarOutlined style={{color: '#faad14'}}/>
                                         <span style={{fontWeight: 'bold'}}>{item.rating}</span>
                                     </div>
-                                </List.Item>
-                            )}
-                        />
+                                </div>
+                            ))}
+                        </div>
                     </Card>
                 </Col>
             </Row>
@@ -168,7 +177,11 @@ export default function AdminDashboard() {
                                         value={1.2}
                                         suffix="M"
                                         prefix={<ArrowUpOutlined style={{color: '#52c41a'}}/>}
-                                        valueStyle={{color: '#262626'}}
+                                        styles={{
+                                            content: {
+                                                color: '#262626'
+                                            }
+                                        }}
                                     />
                                 </Card>
                             </Col>
@@ -178,7 +191,11 @@ export default function AdminDashboard() {
                                         title="本周新增用户"
                                         value={567}
                                         prefix={<ArrowUpOutlined style={{color: '#52c41a'}}/>}
-                                        valueStyle={{color: '#262626'}}
+                                        styles={{
+                                            content: {
+                                                color: '#262626'
+                                            }
+                                        }}
                                     />
                                 </Card>
                             </Col>
@@ -188,7 +205,11 @@ export default function AdminDashboard() {
                                         title="今日新增评论"
                                         value={890}
                                         prefix={<CommentOutlined style={{color: '#52c41a'}}/>}
-                                        valueStyle={{color: '#262626'}}
+                                        styles={{
+                                            content: {
+                                                color: '#262626'
+                                            }
+                                        }}
                                     />
                                 </Card>
                             </Col>
@@ -198,7 +219,11 @@ export default function AdminDashboard() {
                                         title="用户留存率"
                                         value={68}
                                         suffix="%"
-                                        valueStyle={{color: '#262626'}}
+                                        styles={{
+                                            content: {
+                                                color: '#262626'
+                                            }
+                                        }}
                                     />
                                 </Card>
                             </Col>

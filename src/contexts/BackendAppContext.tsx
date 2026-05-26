@@ -1,8 +1,8 @@
 'use client';
 
 import React, {createContext, useContext, useState, useCallback} from 'react';
-import {createPortal} from 'react-dom';
 import MediaLibrary, {MediaType} from "@/components/backend/MediaLibrary";
+import {App} from "antd";
 
 interface MediaLibraryOptions {
     multiple?: boolean;
@@ -41,22 +41,15 @@ export function BackendAppProvider({children}: { children: React.ReactNode }) {
     return (
         <BackendAppContext.Provider value={contextValue}>
             {children}
-            {typeof document !== 'undefined' && (
-                <>
-                    {
-                        mediaLibraryOpen && createPortal(
-                            <MediaLibrary
-                                {...mediaLibraryOptions}
-                                open={true}
-                                onClose={closeMediaLibrary}
-                            />
-                            ,
-                            document.body
-                        )
-                    }
-                </>
-            )}
-
+            {
+                mediaLibraryOpen && (
+                    <MediaLibrary
+                        {...mediaLibraryOptions}
+                        open={true}
+                        onClose={closeMediaLibrary}
+                    />
+                )
+            }
         </BackendAppContext.Provider>
     )
 }
@@ -67,4 +60,14 @@ export function useBackendApp() {
         throw new Error('useBackendApp must be used inside BackendAppProvider');
     }
     return context;
+}
+
+export function useMediaLibrary() {
+    const {mediaLibrary} = useBackendApp();
+    return mediaLibrary;
+}
+
+export function useMessage(){
+    const {message} = App.useApp();
+    return message;
 }

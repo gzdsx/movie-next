@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Card, Row, Col, Statistic, Progress, List, Avatar } from 'antd';
+import { Card, Row, Col, Statistic, Progress, Avatar } from 'antd';
 import {
   ArrowUpOutlined,
   EyeOutlined,
@@ -162,27 +162,23 @@ export default function AnalyticsPage() {
 
         <Col xs={24} lg={10}>
           <Card title="月度增长趋势">
-            <List
-              itemLayout="horizontal"
-              dataSource={monthlyData}
-              renderItem={(item) => (
-                <List.Item>
-                  <List.Item.Meta
-                    avatar={
-                      <Avatar style={{ backgroundColor: '#f0f0f0', color: '#262626' }}>
-                        {item.month}
-                      </Avatar>
-                    }
-                    title={`${(item.views / 1000).toFixed(0)}K 播放量`}
-                    description="月度统计"
-                  />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {monthlyData.map((item) => (
+                <div key={item.month} style={{ display: 'flex', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f0f0f0' }}>
+                  <Avatar style={{ backgroundColor: '#f0f0f0', color: '#262626', marginRight: 12 }}>
+                    {item.month}
+                  </Avatar>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 500 }}>{`${(item.views / 1000).toFixed(0)}K 播放量`}</div>
+                    <div style={{ color: '#8c8c8c', fontSize: 12 }}>月度统计</div>
+                  </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                     <ArrowUpOutlined style={{ color: '#52c41a' }} />
                     <span style={{ color: '#52c41a', fontWeight: 'bold' }}>{item.growth}</span>
                   </div>
-                </List.Item>
-              )}
-            />
+                </div>
+              ))}
+            </div>
           </Card>
         </Col>
       </Row>
@@ -210,36 +206,32 @@ export default function AnalyticsPage() {
 
         <Col xs={24} lg={12}>
           <Card title="用户增长统计">
-            <List
-              grid={{ gutter: 16, column: 1 }}
-              dataSource={userGrowth}
-              renderItem={(item) => (
-                <List.Item>
-                  <Card size="small" style={{ background: '#fafafa' }}>
-                    <Row gutter={16}>
-                      <Col span={8}>
-                        <Statistic title="时间段" value={item.date} valueStyle={{ fontSize: 16 }} />
-                      </Col>
-                      <Col span={8}>
-                        <Statistic 
-                          title="新增用户" 
-                          value={item.newUsers} 
-                          valueStyle={{ fontSize: 16, color: '#52c41a' }}
-                          prefix="+"
-                        />
-                      </Col>
-                      <Col span={8}>
-                        <Statistic 
-                          title="活跃用户" 
-                          value={item.active} 
-                          valueStyle={{ fontSize: 16 }}
-                        />
-                      </Col>
-                    </Row>
-                  </Card>
-                </List.Item>
-              )}
-            />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {userGrowth.map((item) => (
+                <Card key={item.date} size="small" style={{ background: '#fafafa' }}>
+                  <Row gutter={16}>
+                    <Col span={8}>
+                      <Statistic title="时间段" value={item.date} valueStyle={{ fontSize: 16 }} />
+                    </Col>
+                    <Col span={8}>
+                      <Statistic
+                        title="新增用户"
+                        value={item.newUsers}
+                        valueStyle={{ fontSize: 16, color: '#52c41a' }}
+                        prefix="+"
+                      />
+                    </Col>
+                    <Col span={8}>
+                      <Statistic
+                        title="活跃用户"
+                        value={item.active}
+                        valueStyle={{ fontSize: 16 }}
+                      />
+                    </Col>
+                  </Row>
+                </Card>
+              ))}
+            </div>
           </Card>
         </Col>
       </Row>

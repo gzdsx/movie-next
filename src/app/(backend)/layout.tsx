@@ -1,8 +1,11 @@
 import {ConfigProvider, App} from "antd";
 import {Metadata} from "next";
+import {cookies} from "next/headers";
 import {SessionProvider} from "next-auth/react";
 import {AntdRegistry} from "@ant-design/nextjs-registry";
-import {LocaleProvider} from "@/contexts/LocaleContext";
+import AdminRootLayout from "@/app/(backend)/admin/AdminRootLayout";
+import AdminLoginClient from "@/components/backend/AdminLoginClient";
+import {BackendLocaleProvider} from "@/contexts/BackendLocaleContext";
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -18,25 +21,43 @@ export const viewport = {
     userScalable: false
 }
 
-export default function RootLayout({
+export default async function RootLayout({
                                        children,
                                    }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const tokenStorage = await cookies();
+    const accessToken = tokenStorage.get('adminToken')?.value;
     return (
         <html lang="zh" className="w-full overflow-x-hidden relative">
         <body className={`bg-black text-white min-h-screen w-full overflow-x-hidden relative overscroll-x-none`}>
-        <LocaleProvider>
-            <ConfigProvider theme={{}}>
+        <BackendLocaleProvider>
+            <ConfigProvider theme={{
+                components: {
+                    Button: {
+                        iconGap: 4
+                    }
+                },
+                token: {
+                    colorPrimary: '#55b5a5',
+                    colorLink: '#55b5a5',
+                }
+            }}>
                 <AntdRegistry>
                     <SessionProvider>
                         <App>
-                            {children}
+                            {
+                                accessToken ? (
+                                    <AdminRootLayout>{children}</AdminRootLayout>
+                                ) : (
+                                    <AdminLoginClient/>
+                                )
+                            }
                         </App>
                     </SessionProvider>
                 </AntdRegistry>
             </ConfigProvider>
-        </LocaleProvider>
+        </BackendLocaleProvider>
         </body>
         </html>
     );

@@ -1,25 +1,41 @@
-import {auth} from "@/auth"; // 服务端获取 session
-import {getSession} from "next-auth/react";
+import Cookies from "js-cookie";
 
-const BASE_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
 interface FetchOptions extends RequestInit {
     data?: any;
     params?: Record<string, any>;
 }
 
-async function getAuthSession() {
-    // 判断环境：如果 window 不存在，说明在服务端
-    if (typeof window === "undefined") {
-        return await auth();
+export interface ResponseError {
+    status: number | string;
+    message: string;
+    errors: any;
+}
+
+function serializeParams(params: Record<string, any>) {
+    const parts = [];
+    for (const key in params) {
+        const value = params[key];
+        if (value == null) continue;
+
+        if (Array.isArray(value)) {
+            value.forEach(item => {
+                parts.push(`${key}[]=${encodeURIComponent(item)}`);
+            });
+        } else {
+            parts.push(`${key}=${encodeURIComponent(value)}`);
+        }
     }
-    return await getSession();
+    return parts.join('&');
 }
 
 export async function apiFetch(endpoint: string, {data, params, ...options}: FetchOptions = {}) {
     // 1. 处理 URL 参数
-    const queryString = params ? `?${new URLSearchParams(params).toString()}` : '';
-    const url = `${BASE_API_URL}${endpoint}${queryString}`;
+    let url = `${BASE_URL}${endpoint}`;
+    if (params) {
+        url += '?' + serializeParams(params);
+    }
 
     // 2. 默认 Headers 配置
     const headers = new Headers({
@@ -29,10 +45,7 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
     });
 
     // 3. 自动注入 Token (如果是 Token 认证方案)
-    // 如果是 Sanctum Cookie 方案，fetch 会自动携带凭证，无需手动加 Authorization
-    const session = await getAuthSession();
-    const token = (session as any)?.accessToken;
-
+    const token = Cookies.get('adminToken');
     if (token) {
         headers.set('Authorization', `Bearer ${token}`);
     }
@@ -44,10 +57,7 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
             const headerStore = await getHeaders();
 
             // 按照优先级获取真实 IP：Cloudflare -> 现有转发链路 -> 节点 IP
-            const realIp = headerStore.get('cf-connecting-ip') ||
-                headerStore.get('x-forwarded-for')?.split(',')[0] ||
-                '';
-
+            const realIp = headerStore.get('x-forwarded-for')?.split(',')[0] || '';
             if (realIp) {
                 // 显式设置，让 Laravel 的 TrustProxies 能够识别
                 headers.set('X-Real-IP', realIp);
@@ -78,21 +88,30 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
         // 4. 统一错误拦截
         if (response.status === 401) {
             // 处理未授权，例如跳转登录
-            if (typeof window !== 'undefined') window.location.href = '/login';
+            // if (typeof window !== 'undefined') window.location.href = '/login?callbackUrl=' + encodeURIComponent(window.location.pathname);
+            throw {
+                status: 401,
+                message: 'Unauthorized',
+            }
+        }
+
+        // 204 No Content 处理
+        if (response.status === 204) {
+            throw {
+                status: 204,
+                message: 'No Content',
+            }
         }
 
         if (!response.ok) {
             const errorData = await response.json();
-            //console.log('response:',errorData);
+            //console.log('errorData:', errorData);
             throw {
-                status: errorData.code,
+                status: errorData.status,
                 message: errorData.message || '请求失败',
                 errors: errorData.errors, // Laravel 的表单验证错误通常放在这里
-            };
+            }
         }
-
-        // 204 No Content 处理
-        if (response.status === 204) return null;
 
         return await response.json();
     } catch (error) {

@@ -4,8 +4,8 @@ import {useState} from "react";
 import {useRouter} from 'next/navigation';
 import {Form, Input, Select, Button, Row, Col, Image} from 'antd';
 import {UploadOutlined, DeleteOutlined} from '@ant-design/icons';
-import {useBackendApp} from "@/contexts/BackendAppProvider";
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useBackendApp} from "@/contexts/BackendAppContext";
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 import RichTextEditor from '@/components/RichTextEditor';
 
 const {TextArea} = Input;
