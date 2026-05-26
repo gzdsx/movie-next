@@ -4,6 +4,10 @@ export interface Movie {
     title?: string;
     thumbnail?: string;
     remarks?: string;
+    actors?: string;
+    directors?: string;
+    description?: string;
+    source_name?: string;
 }
 
 
@@ -11,7 +15,7 @@ export const MovieCard = ({movie = {}, linkTarget = "_blank"}: { movie: Movie, l
     return (
         <div>
             <div className="pt-[145%] relative overflow-hidden">
-                <a href={`/video/${movie.vid}`} target={linkTarget}>
+                <a href={`/video/${movie.vid}`} title={`主演:${movie.actors}`} target={linkTarget}>
                     <img
                         src={movie.thumbnail}
                         alt={movie.title}
@@ -23,7 +27,7 @@ export const MovieCard = ({movie = {}, linkTarget = "_blank"}: { movie: Movie, l
             </div>
             <div className="p-2">
                 <h3 className="text-sm font-semibold truncate text-center">
-                    <a href={`/video/${movie.vid}`} target={linkTarget} title={movie.title}>{movie.title}</a>
+                    <a href={`/video/${movie.vid}`} target={linkTarget} title={`主演:${movie.actors}`}>{movie.title}</a>
                 </h3>
             </div>
         </div>
