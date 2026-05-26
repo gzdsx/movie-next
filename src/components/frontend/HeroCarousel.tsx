@@ -47,7 +47,9 @@ const HeroCarousel = ({slides}: HeroCarouselProps) => {
                 {
                     slides.map((slide) => (
                         <CarouselItem key={slide.id}>
-                            <img src={slide.thumbnail} alt={slide.title} className="w-full h-[40vw] object-cover"/>
+                            <a href={slide.link} target="_blank">
+                                <img src={slide.thumbnail} alt={slide.title} className="w-full h-[40vw] object-cover"/>
+                            </a>
                         </CarouselItem>
                     ))
                 }

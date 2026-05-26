@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 export interface Movie {
     id?: number;
     vid?: string;
@@ -13,7 +11,7 @@ export const MovieCard = ({movie = {}, linkTarget = "_blank"}: { movie: Movie, l
     return (
         <div>
             <div className="pt-[145%] relative overflow-hidden">
-                <Link href={`/video/${movie.vid}`} target={linkTarget} prefetch={false}>
+                <a href={`/video/${movie.vid}`} target={linkTarget}>
                     <img
                         src={movie.thumbnail}
                         alt={movie.title}
@@ -21,11 +19,11 @@ export const MovieCard = ({movie = {}, linkTarget = "_blank"}: { movie: Movie, l
                     />
                     <div
                         className="absolute bg-linear-to-t from-black/80 to-transparent bottom-0 w-full py-1.5 px-1 text-white text-right">{movie.remarks}</div>
-                </Link>
+                </a>
             </div>
             <div className="p-2">
                 <h3 className="text-sm font-semibold truncate text-center">
-                    <Link href={`/video/${movie.vid}`} target={linkTarget} title={movie.title} prefetch={false}>{movie.title}</Link>
+                    <a href={`/video/${movie.vid}`} target={linkTarget} title={movie.title}>{movie.title}</a>
                 </h3>
             </div>
         </div>
