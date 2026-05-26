@@ -81,29 +81,35 @@ export default async function VideoPage({params}: { params: { vid: string } }) {
                         <div className="mb-8">
                             <h1 className="text-3xl font-bold mb-2">{video?.title + ' - ' + video?.source_name}</h1>
                             <div className="flex items-center gap-4 text-gray-400 mb-4">
-                        <span className="flex items-center gap-1">
-                          <Star className="w-4 h-4 text-yellow-500 fill-yellow-500"/>
-                            {video.score || '8.0'}
-                        </span>
+                                <span className="flex items-center gap-1">
+                                  <Star className="w-4 h-4 text-yellow-500 fill-yellow-500"/>
+                                    {video.score || '8.0'}
+                                </span>
                                 <span>{video.year}</span>
                                 <span>{video.regions}</span>
                                 <span>{video.tags}</span>
                             </div>
                             {
-                                video.type !== 'match' && (
-                                    <>
-                                        <div className="flex items-center gap-4 mb-4">
-                                            <span>导演:{video.directors}</span>
-                                        </div>
-                                        <div className="flex items-center gap-4 mb-4">
-                                            <span>演员:{video.actors}</span>
-                                        </div>
-                                    </>
+                                video.directors && (
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <span>导演:{video.directors}</span>
+                                    </div>
                                 )
                             }
-                            <p className="text-gray-300 leading-relaxed">
-                                {video?.description}
-                            </p>
+                            {
+                                video.actors && (
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <span>主演:{video.actors}</span>
+                                    </div>
+                                )
+                            }
+                            {
+                                (video.description && video.description !== '内详') && (
+                                    <p className="text-gray-300 leading-relaxed">
+                                        {video.description}
+                                    </p>
+                                )
+                            }
                             <div className="gap-4 mt-4">
                                 <h2>剧集</h2>
                                 <div className="flex flex-wrap gap-2 mt-2">
