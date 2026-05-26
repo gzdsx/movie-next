@@ -160,7 +160,11 @@ export default function AdminLayoutClient({
     ];
 
     const logout = async () => {
-        await apiPost('/auth/logout');
+        try {
+            await apiPost('/auth/logout');
+        }catch (e){
+
+        }
         window.location.reload();
     }
 

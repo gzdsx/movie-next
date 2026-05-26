@@ -1,8 +1,8 @@
 import {Star, ThumbsUp, MessageCircle, Share2} from 'lucide-react';
 import {apiGet} from "@/lib/api";
 import Link from "next/link";
-import {MovieCard} from "@/components/MovieCard";
 import {Metadata} from "next";
+import {MovieCard} from "@/components/MovieCard";
 import AdsenseBanner from "@/components/AdsenseBanner";
 import VideoPlayer from "@/components/VideoPlayer";
 
@@ -83,18 +83,24 @@ export default async function VideoPage({params}: { params: { vid: string } }) {
                             <div className="flex items-center gap-4 text-gray-400 mb-4">
                         <span className="flex items-center gap-1">
                           <Star className="w-4 h-4 text-yellow-500 fill-yellow-500"/>
-                            {video.score || '6.0'}
+                            {video.score || '8.0'}
                         </span>
                                 <span>{video.year}</span>
                                 <span>{video.regions}</span>
                                 <span>{video.tags}</span>
                             </div>
-                            <div className="flex items-center gap-4 mb-4">
-                                <span>导演:{video.directors}</span>
-                            </div>
-                            <div className="flex items-center gap-4 mb-4">
-                                <span>演员:{video.actors}</span>
-                            </div>
+                            {
+                                video.type !== 'match' && (
+                                    <>
+                                        <div className="flex items-center gap-4 mb-4">
+                                            <span>导演:{video.directors}</span>
+                                        </div>
+                                        <div className="flex items-center gap-4 mb-4">
+                                            <span>演员:{video.actors}</span>
+                                        </div>
+                                    </>
+                                )
+                            }
                             <p className="text-gray-300 leading-relaxed">
                                 {video?.description}
                             </p>

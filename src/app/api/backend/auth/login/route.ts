@@ -14,6 +14,7 @@ export async function POST(request: Request) {
         duplex: 'half'
     }
     const response = await fetch(`${baseurl}/auth/login`, requestOptions);
+    console.log(response);
 
 
     if (response.ok) {
@@ -25,6 +26,6 @@ export async function POST(request: Request) {
         return NextResponse.json({code: 0, message: 'OK'});
     } else {
         const json = await response.json();
-        return NextResponse.json(json);
+        return NextResponse.json(json, {status: 422});
     }
 }
