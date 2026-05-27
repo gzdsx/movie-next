@@ -44,9 +44,8 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
     headers.set('Authorization', `Bearer ${token}`);
 
     const timestamp = Date.now();
-    const api_key = process.env.NEXT_PUBLIC_API_KEY;
     const api_secret = process.env.NEXT_PUBLIC_API_SECRET;
-    const signature = sha1(`${api_key}${timestamp}${api_secret}`);
+    const signature = sha1(`${timestamp}${api_secret}`);
     headers.set('x-client-sign', signature);
     headers.set('x-client-timestamp', timestamp.toString());
 
