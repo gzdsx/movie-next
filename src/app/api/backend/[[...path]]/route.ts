@@ -1,6 +1,7 @@
 import {NextRequest, NextResponse} from 'next/server';
 import {headers as getHeaders} from "next/headers";
 import {cookies} from "next/headers";
+import sha1 from "@/lib/sha1";
 
 // 定义真实的后端基础地址
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || '';
@@ -29,6 +30,13 @@ async function handleProxy(request: NextRequest, {params}: { params: { path?: st
     if (token) {
         headers.set('Authorization', `Bearer ${token}`);
     }
+
+    const timestamp = Date.now();
+    const api_key = process.env.NEXT_PUBLIC_API_KEY;
+    const api_secret = process.env.NEXT_PUBLIC_API_SECRET;
+    const signature = sha1(`${api_key}${timestamp}${api_secret}`);
+    headers.set('x-client-sign', signature);
+    headers.set('x-client-timestamp', timestamp.toString());
 
     const contentType = request.headers.get('content-type');
     if (contentType) headers.set('content-type', contentType);

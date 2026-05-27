@@ -1,5 +1,6 @@
 import {auth} from "@/auth"; // 服务端获取 session
-import {getSession} from "next-auth/react"; // 客户端获取 session
+import {getSession} from "next-auth/react";
+import sha1 from "@/lib/sha1";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -16,10 +17,29 @@ async function getAuthSession() {
     return await getSession();
 }
 
+function serializeParams(params: Record<string, any>) {
+    const parts = [];
+    for (const key in params) {
+        const value = params[key];
+        if (value == null || value === 'all') continue;
+
+        if (Array.isArray(value)) {
+            value.forEach(item => {
+                parts.push(`${key}[]=${item}`);
+            });
+        } else {
+            parts.push(`${key}=${value}`);
+        }
+    }
+    return parts.join('&');
+}
+
 export async function apiFetch(endpoint: string, {data, params, ...options}: FetchOptions = {}) {
     // 1. 处理 URL 参数
-    const queryString = params ? `?${new URLSearchParams(params).toString()}` : '';
-    const url = `${BASE_URL}${endpoint}${queryString}`;
+    let url = `${BASE_URL}${endpoint}`;
+    if (params) {
+        url += '?' + serializeParams(params);
+    }
 
     // 2. 默认 Headers 配置
     const headers = new Headers({
@@ -32,10 +52,14 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
     // 如果是 Sanctum Cookie 方案，fetch 会自动携带凭证，无需手动加 Authorization
     const session = await getAuthSession();
     const token = (session as any)?.accessToken;
+    headers.set('Authorization', `Bearer ${token}`);
 
-    if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-    }
+    const timestamp = Date.now();
+    const api_key = process.env.NEXT_PUBLIC_API_KEY;
+    const api_secret = process.env.NEXT_PUBLIC_API_SECRET;
+    const signature = sha1(`${api_key}${timestamp}${api_secret}`);
+    headers.set('x-client-sign', signature);
+    headers.set('x-client-timestamp', timestamp.toString());
 
     const isServer = typeof window === 'undefined';
     if (isServer) {

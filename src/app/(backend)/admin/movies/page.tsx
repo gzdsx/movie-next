@@ -18,7 +18,6 @@ import {
 } from '@ant-design/icons';
 import type {ColumnsType} from 'antd/es/table';
 import {apiGet, apiDelete, apiPut} from "@/lib/backendApi";
-import Link from "next/link";
 import {useRouter} from "next/navigation";
 
 const {Search} = Input;
@@ -78,9 +77,9 @@ export default function MoviesManagement() {
             key: 'title',
             width: 'auto',
             render: (title: string, record: MovieType) => (
-                <Link href={record.url} target="_blank">
+                <a href={record.url} target="_blank">
                     <strong className={'text-gray-600 hover:text-blue-500'}>{title}</strong>
-                </Link>
+                </a>
             )
         },
         {

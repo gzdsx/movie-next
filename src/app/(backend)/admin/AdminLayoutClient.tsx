@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useState} from 'react';
-import {Layout, Menu, theme, Avatar, Dropdown, Button, Badge} from 'antd';
+import {Layout, Menu, theme, Avatar, Dropdown, Button} from 'antd';
 import type {MenuProps} from 'antd';
 import {
     DashboardOutlined,
@@ -9,7 +9,6 @@ import {
     UserOutlined,
     CommentOutlined,
     SettingOutlined,
-    BellOutlined,
     LogoutOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -26,6 +25,7 @@ import {useTranslations} from '@/contexts/BackendLocaleContext';
 import LanguageSwitcher from '@/components/backend/LanguageSwitcher';
 import {apiPost} from "@/lib/backendApi";
 import {useAdministrator} from "@/contexts/BackendAppContext";
+import Cookies from "js-cookie";
 
 const {Header, Sider, Content} = Layout;
 
@@ -164,6 +164,9 @@ export default function AdminLayoutClient({
             await apiPost('/auth/logout');
         }catch (e){
 
+        }finally {
+            Cookies.remove('adminToken');
+            Cookies.remove('adminUser');
         }
         window.location.reload();
     }
@@ -225,7 +228,7 @@ export default function AdminLayoutClient({
                 <Menu
                     mode="inline"
                     selectedKeys={[pathname]}
-                    defaultOpenKeys={['user', 'analytics', 'system', 'pages', 'posts']}
+                    defaultOpenKeys={['/admin']}
                     style={{borderRight: 0}}
                     items={menuItems}
                 />

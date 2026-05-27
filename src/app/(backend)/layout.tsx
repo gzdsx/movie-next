@@ -21,15 +21,28 @@ export const viewport = {
     userScalable: false
 }
 
+async function getAccessToken() {
+    const cookieStorage = await cookies();
+    return cookieStorage.get('adminToken')?.value;
+}
+
+async function getAdminUser() {
+    try {
+        const cookieStorage = await cookies();
+        const userData = cookieStorage.get('adminUser')?.value;
+        return userData ? JSON.parse(userData) : null;
+    } catch (e) {
+        return null;
+    }
+}
+
 export default async function RootLayout({
                                              children,
                                          }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const cookieStorage = await cookies();
-    const accessToken = cookieStorage.get('adminToken')?.value;
-    const adminUser = cookieStorage.get('adminUser')?.value;
-    const administrator = adminUser ? JSON.parse(adminUser) : null;
+    const accessToken = await getAccessToken();
+    const administrator = await getAdminUser();
 
     return (
         <html lang="zh" className="w-full overflow-x-hidden relative">

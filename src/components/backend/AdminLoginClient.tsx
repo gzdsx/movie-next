@@ -5,6 +5,7 @@ import {Form, Input, Button, Card} from 'antd';
 import {UserOutlined, LockOutlined} from '@ant-design/icons';
 import {apiPost} from "@/lib/backendApi";
 import {useMessage} from "@/contexts/BackendAppContext";
+import Cookies from "js-cookie";
 
 export default function AdminLoginClient() {
     const message = useMessage();
@@ -16,7 +17,10 @@ export default function AdminLoginClient() {
         apiPost(`/auth/login`, {
             account: values.account,
             password: values.password
-        }).then(() => {
+        }).then((response) => {
+            const {access_token, user} = response.data;
+            Cookies.set('adminToken', access_token);
+            Cookies.set('adminUser', JSON.stringify(user));
             window.location.reload();
         }).catch(reason => {
             //console.log(reason);
