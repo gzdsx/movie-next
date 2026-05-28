@@ -32,13 +32,19 @@ export async function generateMetadata({params}: any): Promise<Metadata> {
     // 从你的 Laravel API 获取电影详情
     const movie = await getVideo(vid);
 
+    if (movie.id) {
+        return {
+            title: `${movie.title + '-' + movie.source_name} - 小马影视`,
+            keywords: `名称:${movie.title},别名:${movie.alias},导演:${movie.directors},主演:${movie.actors}`,
+            description: `剧情介绍：${movie.description?.slice(0, 100)}...`,
+            openGraph: {
+                images: [movie.thumbnail], // 社交媒体分享时的预览图
+            },
+        };
+    }
+
     return {
-        title: `${movie.title + '-' + movie.source_name} - 小马影视`,
-        keywords: `名称:${movie.title},别名:${movie.alias},导演:${movie.directors},主演:${movie.actors}`,
-        description: `剧情介绍：${movie.description.slice(0, 100)}...`,
-        openGraph: {
-            images: [movie.thumbnail], // 社交媒体分享时的预览图
-        },
+        title: '视频已被删除 - 小马影视'
     };
 }
 
@@ -54,12 +60,13 @@ export default async function VideoPage({params}: { params: { vid: string } }) {
         description: video.description,
         thumbnailUrl: video.thumbnail,
         contentUrl: video.source_src,
-        uploadDate: new Date(video.created_at).toISOString(),
+        uploadDate: video.created_at ? new Date(video.created_at).toISOString() : '',
     }
 
     if (!video.id) {
         return (
-            <div className="flex flex-col gap-y-4 items-center justify-center mx-auto px-4 py-4 ext-white min-h-80 md:min-h-160">
+            <div
+                className="flex flex-col gap-y-4 items-center justify-center mx-auto px-4 py-4 ext-white min-h-80 md:min-h-160">
                 <h1 className="text-2xl font-bold mb-2">视频已被删除</h1>
                 <div>
                     <a href={'/'} className={'bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-sm'}>返回首页</a>
