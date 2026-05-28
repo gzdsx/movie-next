@@ -9,9 +9,9 @@ import VideoPlayer from "@/components/VideoPlayer";
 const getVideo = async (vid: string) => {
     try {
         const res = await apiGet(`/movies/${vid}`);
-        return res.data;
+        return {...res.data};
     } catch (e) {
-        console.error(e);
+        //console.log(e);
         return {};
     }
 }
@@ -21,7 +21,7 @@ const getRelatedVideos = async (id: number) => {
         const res = await apiGet(`/movies/${id}/related`, {limit: 10});
         return res.data.items;
     } catch (e) {
-        console.error(e);
+        console.log(e);
         return [];
     }
 }
@@ -45,7 +45,7 @@ export async function generateMetadata({params}: any): Promise<Metadata> {
 export default async function VideoPage({params}: { params: { vid: string } }) {
     const {vid} = await params;
     const video: any = await getVideo(vid);
-    const relatedVideos = await getRelatedVideos(video.id);
+    const relatedVideos = await getRelatedVideos(video.id || 0);
     const comments: any[] = [];
     const jsonLd = {
         '@context': 'https://schema.org',
@@ -55,6 +55,17 @@ export default async function VideoPage({params}: { params: { vid: string } }) {
         thumbnailUrl: video.thumbnail,
         contentUrl: video.source_src,
         uploadDate: new Date(video.created_at).toISOString(),
+    }
+
+    if (!video.id) {
+        return (
+            <div className="flex flex-col gap-y-4 items-center justify-center mx-auto px-4 py-4 ext-white min-h-80 md:min-h-160">
+                <h1 className="text-2xl font-bold mb-2">视频已被删除</h1>
+                <div>
+                    <a href={'/'} className={'bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-sm'}>返回首页</a>
+                </div>
+            </div>
+        )
     }
 
     return (
