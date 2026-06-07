@@ -33,7 +33,6 @@ export default function Footer() {
             tracing: false,
         });
     }, []);
-
     return (
         <footer className="bg-gray-900 text-gray-300 py-12 border-t border-gray-800">
             <div className="container mx-auto px-4">

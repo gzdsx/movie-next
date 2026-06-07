@@ -60,6 +60,7 @@ export default function RootLayout({
             })(window, document, "clarity", "script", "wma3jso1hz");
           `}
         </script>
+
         </body>
         </html>
     );
