@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import {Mail} from 'lucide-react';
+import Script from "next/script";
 
 export default function Footer() {
     return (
@@ -67,6 +68,36 @@ export default function Footer() {
                     <p>&copy; {new Date().getFullYear()} xiaomavv. All rights reserved.</p>
                 </div>
             </div>
+            <Script id={'arms'} strategy={'afterInteractive'}>{`
+            !(function(c,b,d,a){c[a]||(c[a]={});c[a]=
+    { 
+      endpoint: 'https://proj-xtrace-7163232d705a4e5f4fba8b6b3dd9bad0-cn-hangzhou.cn-hangzhou.log.aliyuncs.com/rum/web/v2?workspace=default-cms-1374469303544670-cn-hangzhou&service_id=dj7ihbl1su@a1a2c9020f8cd35ae0a3d',
+      // 设置环境信息，参考值：'prod' | 'gray' | 'pre' | 'daily' | 'local'
+      env: 'prod', 
+      // 设置路由模式， 参考值：'history' | 'hash'
+      spaMode: 'history',
+      collectors: {
+        // 页面性能指标监听开关，默认开启
+        perf: true,
+        // WebVitals指标监听开关，默认开启
+        webVitals: true,
+        // Ajax监听开关，默认开启
+        api: true,
+        // 静态资源开关，默认开启
+        staticResource: true,
+        // JS错误监听开关，默认开启
+        jsError: true,
+        // 控制台错误监听开关，默认开启
+        consoleError: true,
+        // 用户行为监听开关，默认开启
+        action: true,
+      },
+      // 链路追踪配置开关，默认关闭
+      tracing: false,
+    }
+    with(b)with(body)with(insertBefore(createElement("script"),firstChild))setAttribute("crossorigin","",src=d)
+})(window, document, "https://sdk.rum.aliyuncs.com/v2/browser-sdk.js", "__rum");
+            `}</Script>
         </footer>
     );
 }
